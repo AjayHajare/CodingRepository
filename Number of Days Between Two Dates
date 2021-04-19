@@ -1,0 +1,52 @@
+Write a program to count the number of days between two dates.
+The two dates are given as strings, their format is YYYY-MM-DD as shown in the examples.
+
+Example 1:
+Input: date1 = "2019-06-29", date2 = "2019-06-30"
+Output: 1
+
+Example 2:
+Input: date1 = "2020-01-15", date2 = "2019-12-31"
+Output: 15
+ 
+
+Constraints:
+The given dates are valid dates between the years 1971 and 2100.
+
+*********************************************************************************************************************
+
+/* Hint is to calculate number of days from 01-01-1971 for both given dates and then substraction the days count for both.
+
+class Solution {
+    int months[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    
+    public int daysBetweenDates(String date1, String date2) {
+        return (Math.abs( daysfrom1971(date1) - daysfrom1971(date2) ));
+    }
+    
+    public int daysfrom1971(String date){
+        String dates[] = date.split("-");                         // Created array of String by spliting the String at "-" 
+        
+        int year = Integer.parseInt(dates[0]);                    
+        int month = Integer.parseInt(dates[1]);
+        int day = Integer.parseInt(dates[2]);
+        
+        int count = day;
+        
+        for(int i=1971; i<year; i++){                           //For each year from 1971, if the year is leap the add '366' otherwise add '365'
+            if(isLeap(i))   count += 366;
+            else            count += 365;
+        }
+        for(int i=0; i<month-1; i++){     
+            count += months[i];
+        }
+        if(isLeap(year) && month>2)                             // If the year is leap and february is included, then add '1' to the count
+            count += 1;
+        
+        return count;
+    }
+    
+    public boolean isLeap(int year){
+        return (year%400==0 || year%100!=0 && year%4==0);
+    }
+}
