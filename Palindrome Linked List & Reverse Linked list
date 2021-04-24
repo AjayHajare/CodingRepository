@@ -26,13 +26,10 @@ class Solution {
         ListNode fast = head;
         ListNode slow = head;
         
-        while(fast != null){
-            slow = slow.next;
-            if(fast.next != null)           
-                fast = fast.next.next;                  //'fast' increaments by two spaces and 'slow' increaments by 1 space. Hence when 'fast' is at the end of list, 'slow' 
-                                                        // is at middle of list
-            else
-                fast = fast.next;
+        while(fast != null && fast.next != null){
+            slow = slow.next;          
+            fast = fast.next.next;                  //'fast' increaments by two spaces and 'slow' increaments by 1 space. Hence when 'fast' is at the end of list, 'slow' is 
+                                                    //at middle of list
         }
         
         ListNode newHead = reverse(slow);               // Reverse the list from middle onwards
