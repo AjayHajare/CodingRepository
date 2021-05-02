@@ -34,8 +34,8 @@ subrectangleQueries.updateSubrectangle(3, 0, 3, 2, 10);
 // 5   5   5
 // 5   5   5
 // 10  10  10 
-subrectangleQueries.getValue(3, 1); // return 10
-subrectangleQueries.getValue(0, 2); // return 5
+subrectangleQueries.getValue(3, 1); // return '10'
+subrectangleQueries.getValue(0, 2); // return '5'
 
 Constraints:
 There will be at most 500 operations considering both methods: updateSubrectangle and getValue.
