@@ -1,0 +1,51 @@
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all 
+the intervals in the input.
+
+Example 1:
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+
+Example 2:
+Input: intervals = [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+
+Constraints:
+1 <= intervals.length <= 104
+intervals[i].length == 2
+0 <= starti <= endi <= 104
+
+**********************************************************************************************************************************************************************************
+
+//Here, we first copied the values of first row of 2D array in 1D array. That 1D array is added it to result arraylist. In for loop, when intervals overlap then we update 1D 
+//array, which in turn updates the content in result arraylist. when intervals overlap then we change 1D array, then add new changed array in the result arraylist.
+
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        List<int[]> result = new ArrayList<int[]>();                                        //define arraylist to store the result
+        
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]) );                     //Inside Arrays.sort(), Gamma function to sort the given 2D array using '0' element
+        
+        int newInterval[] = new int[2]; 
+        nnewInterval = intervals[0];                                                       //'newInterval' array copies the values of first row of 2D array.
+        
+        result.add(newInterval);                                                          //Content of 'newInterval' array, is added to result i.e. first row of given 2D array
+        
+        for(int i=0; i<intervals.length; i++){
+            if(intervals[i][0] <= newInterval[1])                                         //For each row of given 2D array, check whether intervals are overlapping
+                newInterval[1] = Math.max(intervals[i][1], newInterval[1]);               //If overlapping, then update 'newInterval[1]'
+            else{
+                newInterval = intervals[i];                                               //If not overlapping, then update 'newInterval' with current row of 2D array
+                result.add(newInterval);                                                  
+            }
+        }
+        
+        int res[][] = new int[result.size()][2];                                        //Define a 2D array to store result as return type required is 2D array
+        for(int i=0; i<result.size(); i++){
+            res[i] = result.get(i);                                                     //copy the content of each row of result ArrayList, to each row 2D array
+        }
+        
+        return res;
+    }
+}
