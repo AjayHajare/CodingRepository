@@ -49,3 +49,6 @@ class Solution {
         return res;
     }
 }
+
+
+Time Complexity : There is one for loop which takes O(n) and the 'Arrays.sort()' function takes O(nlog) time. So total time complexity O(nlogn);
