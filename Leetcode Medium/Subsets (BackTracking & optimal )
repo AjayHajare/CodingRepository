@@ -1,0 +1,69 @@
+Recursion : function calls itself until reaches a base case.
+
+Backtracking : you use recursion in order to explore all the possibilities until you get the best result for the problem.
+
+"Conceptually, you start at the root of a tree; the tree probably has some good leaves and some bad leaves, though it may be that the leaves are all good or all bad. 
+You want to get to a good leaf. At each node, beginning with the root, you choose one of its children to move to, and you keep this up until you get to a leaf.
+
+Suppose you get to a bad leaf. You can backtrack to continue the search for a good leaf by revoking your most recent choice, and trying out the next option in that set 
+of options. If you run out of options, revoke the choice that got you here, and try another choice at that node. If you end up at the root with no options left, there are 
+no good leaves to be found."
+
+Backtracking pattern is   choose --> explore --> unchoose .
+
+Note that -  backtracking will call itself more than once in the body of function, while it's not normally true for recursion
+
+Link -  https://algo.monster/problems/backtracking
+*********************************************************************************************************************************************************************************
+Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+
+Example 1:
+Input: nums = [1,2,3]
+Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+
+Example 2:
+Input: nums = [0,1]
+Output: [[0,1],[1,0]]
+
+Example 3:
+Input: nums = [1]
+Output: [[1]]
+ 
+Constraints:
+1 <= nums.length <= 6
+-10 <= nums[i] <= 10
+All the integers of nums are unique.
+
+
+********************************************************************************************************************************************************************************
+
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        backtrack(nums, list, new ArrayList<>(), new boolean[nums.length]);
+        return list;
+    }
+    
+    public static void backtrack(int nums[], List<List<Integer>> list, List<Integer> curPermute, boolean used[]){
+        if(curPermute.size() == nums.length){
+            list.add(new ArrayList<Integer>(curPermute));                                       // make a deep copy since otherwise we'd be append the same list over and over
+            return;
+        }
+        else{
+            for(int i=0; i<nums.length; i++){
+                if(used[i])                                                                   // if element is used then skip
+                    continue;
+                curPermute.add(nums[i]);            
+                used[i] = true;
+                backtrack(nums, list, curPermute, used);                                     // call 'backtrack' function 
+                curPermute.remove(curPermute.size() - 1);                                    /* As Backtracking pattern 'choose --> explore --> unchoose', remove recently added
+                                                                                                   recently added element from 'current permutation' while backtracking    */
+                used[i] = false;                                                             // while backtracking set used value for that removed element as 'false' 
+            }             
+        }
+    }
+    
+}
+
+
+Time Complexity  :   
