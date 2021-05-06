@@ -1,0 +1,92 @@
+Given the root of a binary tree, return the inorder traversal of its nodes' values.
+
+Example 1:
+Input: root = [1,null,2,3]
+Output: [1,3,2]
+
+Example 2:
+Input: root = []
+Output: []
+
+Example 3:
+Input: root = [1]
+Output: [1]
+
+Example 4:
+Input: root = [1,2]
+Output: [2,1]
+
+Example 5:
+Input: root = [1,null,2]
+Output: [1,2]
+ 
+Constraints:
+The number of nodes in the tree is in the range [0, 100].
+-100 <= Node.val <= 100
+
+********************************************************************************************************************************************************************************
+
+//Recursive Appraoch : 
+class Solution {
+    List<Integer> result = new ArrayList<Integer>();
+    public List<Integer> inorderTraversal(TreeNode root) {
+        if(root!=null){
+            inorderTraversal(root.left);
+            result.add(root.val);
+            inorderTraversal(root.right);
+        }
+        
+        return result;
+    }
+}
+
+
+Time Complexity :  The recursion call is done for each of 'n' node  and for each recursion call it take constant time to execute the function, as extra activity is just 
+                    adding 'val' in list. So, it is O(n);
+
+Space Complexity : Recursive call is made for each node. So Auxilary space complexity is O(n). We don't conunt list 'result' for space complexity, as it is used to hold 
+                    the output. 
+                    
+************************************************************************************************************************************************************
+
+
+//Iterative Appraoch :
+I use pushAllLeft() to push all the left children of one Node into the stack, so the algorithm is :
+    1. We push all the left children of root into the stack until there's no more nodes.
+    2. Then we pop from the stack which we'd call cur.
+    3. Add cur to result list
+    4. Recursively call pushAllLeft() on cur's right child.
+
+
+
+class Solution{
+    public List<Integer> inorderTraversal(TreeNode root){
+        List<Integer> result = new ArrayList<Integer>();
+        
+        if(root == null)
+            return result;
+        
+        Stack<TreeNode> stk = new Stack<TreeNode>();
+        TreeNode cur = root;
+        
+        pushAllLeft(cur, stk);
+        while(!stk.isEmpty()){
+            cur = stk.pop();
+            result.add(cur.val);
+            pushAllLeft(cur.right, stk);
+        }
+        
+        return result;
+    }
+    
+    public static void pushAllLeft(TreeNode cur, Stack stk){
+         while(cur!=null){
+            stk.add(cur);
+            cur = cur.left;
+        }
+    }
+}
+
+
+Time complexity : It should be O(n), cause we only add each once into stack and pop it once, so it should be O(2n), thus O(n).
+space complexity : It should be O(h), cause the most number in the stack should be the height of the tree. In worst case, tree can be skewed tree. So, space complexity is O(n).
