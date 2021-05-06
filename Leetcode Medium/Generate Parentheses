@@ -1,3 +1,13 @@
+
+In Java, string objects are immutable, which means once it is created, you cannot change it. So when we concatenate one string with another, a new string is created, and 
+the older one is marked for the garbage collector. So it's a lot of operations, which ends up being O(n^2) complexity.
+
+To solve this problem, the StringBuilder class is used. It works like a mutable String object. The append method helps to avoid all the copying required in string 
+concatenation. It has O(n) complexity.
+
+
+*****************************************************************************************************************************************************************************
+
 Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
 
 Example 1:
@@ -14,7 +24,8 @@ Constraints:
 ******************************************************************************************************************************************************************************
 
 /*
-
+BackTracking Appraoch :-------------------------
+ 
 The goal is to print a string of “(“ ,”)” in certain order. The length of string is 2n. The constraints are that “(“s need to match “)”s.
 Without constraints, we just simply print out “(“ or “)” until length hits n. So the base case will be length ==2 n, recursive case is print out “(“ and “)”. 
 The code will look like :
@@ -45,7 +56,6 @@ if(number of “(“s > number of “)”s){
 add a “)"
 }
 
-
 */
 
 
@@ -72,4 +82,44 @@ class Solution {
 }
 
 
+Time Complexity :  As explain above, the concatenation is O(n^2) operation. And the recursion call is made for '2n' times i.e. O(n) times.
+                   So, total complexity is   O(n^2) * O(n)  =  O(n^3)
+                   
+Space Complexity : Recursion need space upto '2n' , hence Auxiliary space complexity is  O(n);
+
+*******************************************************************************************************************************************************************************
+
+//Same idea, but instead of expensive string concatenation,we used StringBuilder :-------------------------------------------
+
+class Solution{
+   public List<String> generateParenthesis(int n) {
+      List<String> res = new ArrayList<>();
+      helper(res, new StringBuilder(), 0, 0, n);
+      return res;
+  }
+
+  private void helper(List<String> res, StringBuilder sb, int open, int close, int n) {
+    if(open == n && close == n) {
+        res.add(sb.toString());
+        return;
+    }
+    
+    if(open < n) {
+        sb.append("(");
+        helper(res, sb, open+1, close, n);
+        sb.setLength(sb.length()-1);
+    } 
+    if(close < open) {
+        sb.append(")");
+        helper(res, sb, open, close+1, n);
+        sb.setLength(sb.length()-1);
+    }
+  }
+}
+
+
+Time Complexity :  As explain above, the StringBuilder takes O(n) operation. And the recursion call is made for '2n' times i.e. O(n) times.
+                   So, total complexity is   O(n) * O(n)  =  O(n^2)
+                   
+Space Complexity : Recursion need space upto '2n' , hence Auxiliary space complexity is  O(n);
 
