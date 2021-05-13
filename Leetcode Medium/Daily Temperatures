@@ -1,0 +1,62 @@
+Given a list of daily temperatures temperatures, return a list such that, for each day in the input, tells you how many days you would have to wait until a warmer temperature. 
+If there is no future day for which this is possible, put 0 instead. For example, given the list of temperatures temperatures = [73, 74, 75, 71, 69, 72, 76, 73], your output 
+should be [1, 1, 4, 2, 1, 1, 0, 0].
+
+Note: The length of temperatures will be in the range [1, 30000]. Each temperature will be an integer in the range [30, 100].
+
+*******************************************************************************************************************************************************************************
+
+// Bruteforce Approach :------------------------------
+
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int result[] = new int[n];
+        
+        for(int i=0; i<n-1; i++){
+            int count = 0;
+            for(int j=i; j<n; j++){
+                if(temperatures[j] > temperatures[i]){
+                    result[i] = count;
+                    break;
+                }
+                else{
+                    ++count;
+                }
+            }
+        }
+        
+        return result;
+    }
+}
+
+Time Complexity : O(N^2)
+Space complexity : O(1)
+
+
+*******************************************************************************************************************************************************************************
+
+//OPtimal Solution using stack :-----------------------------------
+
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int result[] = new int[temperatures.length];
+        Stack<Integer> stk = new Stack<Integer>();
+        
+        for(int i=0; i<temperatures.length; i++){
+            while(!stk.isEmpty() && temperatures[stk.peek()] < temperatures[i]){          //To compare with element in stack, we have to get index from stack and corresponding
+                                                                                          // element from given temperature array.
+                int index = stk.pop();
+                result[index] = i - index;
+            }
+            stk.push(i);                                                                   //Instead of pushing the element, we push the index of elment in stack.
+        }
+        
+        
+        return result;
+    }
+}
+
+Time Complexity : It seems like O(N^2), but the while loop only processes temperatures that decreased. So every item gets processed either once or twice, not an amount that 
+                  grows with total number of elements. Hence complexity is O(n).
+Space complexity : O(n)
