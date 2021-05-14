@@ -1,0 +1,99 @@
+Given the root of a binary search tree, and an integer k, return the kth (1-indexed) smallest element in the tree.
+
+Example 1:
+Input: root = [3,1,4,null,2], k = 1
+Output: 1
+
+Example 2:
+Input: root = [5,3,6,2,4,null,null,1], k = 3
+Output: 3
+ 
+Constraints:
+The number of nodes in the tree is n.
+1 <= k <= n <= 104
+0 <= Node.val <= 104
+
+*********************************************************************************************************************************************************************************
+
+//Inorder Traversal of BST, gives sorted list. So first traverse the tree using inorder traversal and saved the order of nodes in a list. Then returned the (k-1) element from 
+//the list.
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+class Solution {
+    List<Integer> list = new ArrayList<Integer>();
+    
+    public int kthSmallest(TreeNode root, int k) {
+        inorder(root);
+        return list.get(k - 1);
+    }
+    
+    public void inorder(TreeNode root){
+        if(root==null)
+            return;
+        if(root!=null){
+            inorder(root.left);
+            list.add(root.val);
+            inorder(root.right);
+        }
+    }
+}
+
+
+Time Complexity :   It is O(n + m), where n is the number of nodes, and m is the number of edges. Since the number of edges that can originate from a node is limited to 2 
+                    in the case of a Binary Tree, the maximum number of total edges in a Binary Tree is n-1, where n is the total number of nodes. The complexity then 
+                    becomes O(n + n-1), which is O(n).
+                    
+Space Complexity :  Auxilary space required for recurssion is O(height of tree) = O(log n). 
+                    Space required for the list is O(n).
+                    So total space complexity = O(log n) + O(n) =  O(n)
+
+*****************************************************************************************************************************************************************************
+
+
+//Same logic as above but instead of saving list of all traversed node, used a 'count' variable to count the pass all nodes until we reach the kth smallest node.
+
+
+class Solution {
+    int result, count = 0;
+    
+    public int kthSmallest(TreeNode root, int k) {
+        inorder(root, k);
+        return result;
+    }
+    
+    public void inorder(TreeNode root, int k){
+        if(root!=null){
+            inorder(root.left, k);
+            
+            count++;
+            if(count == k){
+                result = root.val;
+                return;
+            }
+            
+            inorder(root.right, k);
+        }
+    }
+}
+
+
+Time Complexity :   To find the kth element in the BST, we'll definitely need o(k), that is o(n) complexity. But here we simply store the count value in every node. 
+                    And thus we can achieve the search in o(logn).
+                    
+Space Complexity :  Auxilary space required for recurssion is O(height of tree) = O(log n). So, space complexity = O(log n)
