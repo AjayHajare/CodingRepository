@@ -1,0 +1,75 @@
+Given two integer arrays nums1 and nums2, return the maximum length of a subarray that appears in both arrays.
+
+Example 1:
+Input: nums1 = [1,2,3,2,1], nums2 = [3,2,1,4,7]
+Output: 3
+Explanation: The repeated subarray with maximum length is [3,2,1].
+
+Example 2:
+Input: nums1 = [0,0,0,0,0], nums2 = [0,0,0,0,0]
+Output: 5
+ 
+Constraints:
+1 <= nums1.length, nums2.length <= 1000
+0 <= nums1[i], nums2[i] <= 100
+
+*********************************************************************************************************************************************************************************
+
+// This problem is a variation of Longest Common Subsequence(LCS).
+// The Top Down DP solution is :
+
+class Solution {
+    public int findLength(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        int maxValue = 0;
+        
+        int t[][] = new int[m+1][n+1];
+        
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(nums1[i] == nums2[j]){
+                    t[i+1][j+1] = 1 + t[i][j];
+                    maxValue = Math.max( maxValue, t[i+1][j+1]);
+                }
+                else{
+                    t[i+1][j+1] = 0;                            //Actually, no need for this step. As java array will have all '0' values by default. Same done in next approach
+                }
+            }
+        }
+        
+        return maxValue;
+    }
+}
+
+
+Time complexity : O(mn)
+Space complexity : O(mn)
+
+******************************************************************************************************************************************************************************
+
+class Solution {
+    public int findLength(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        int maxValue = 0;
+        
+        int t[][] = new int[m+1][n+1];
+        
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(nums1[i] == nums2[j]){
+                    t[i+1][j+1] = 1 + t[i][j];
+                    maxValue = Math.max( maxValue, t[i+1][j+1]);
+                }
+            }
+        }
+        
+        return maxValue;
+    }
+}
+
+
+Time complexity : O(mn)  -  Overall time complexity remains the same, but the  removing unwanted assignmen minimization the run time drastically.
+Space complexity : O(mn)
+
