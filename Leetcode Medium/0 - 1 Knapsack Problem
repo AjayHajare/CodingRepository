@@ -33,7 +33,7 @@ Constraints:
 1 ≤ v[i] ≤ 1000
 
 
-**********************************************************************************************************************************************************************
+********************************************************************************************************************************************************************
 
 
 //Recurssive Solution :-------
@@ -48,7 +48,13 @@ class Solution{
     }
 }
 
-*********************************************************************************************************************************************************************
+
+Time Complexity: O(2^n). As each state generates two additional function calls. In general, total number of states are approximately equal to 2^n 
+Auxiliary Space :O(n).  For each recursive call, value of n reduced by '1' and will reduce till n becomes '0'. So, max deapth of recursion tree is 'n' and each 
+                        recursive call takes O(1) space. So space complexity is O(n).
+
+
+**********************************************************************************************************************************************************************
 
 //Memoization Solution :-----
 class Solution { 
@@ -76,7 +82,12 @@ class Solution {
     } 
 }
 
-*********************************************************************************************************************************************************************
+
+Time Complexity: O(N*W). As redundant calculations of states are avoided.
+Auxiliary Space: O(N*W). The use of 2D array data structure for storing intermediate states.
+
+
+*********************************************************************************************************************************************************
 
 
 // Bottom Up DP Solution :-------
@@ -97,3 +108,8 @@ class Solution{
         return t[n][W];
     }
 }
+
+
+    Time Complexity: O(N*W). where ‘N’ is the number of weight element and ‘W’ is capacity. As for every weight element we traverse through 
+                             all weight capacities 1<=w<=W.
+    Auxiliary Space: O(N*W). The use of 2-D array of size ‘N*W’.
