@@ -21,7 +21,7 @@ Constraints:
 
 ***********************************************************************************************************************************************************************
 
-// The solution is based on 0/1 knapsack problem.
+// The solution is based on 0/1 knapsack problem :----------------------------------------------
 
 class Solution {
     public boolean canPartition(int[] nums) {
@@ -36,7 +36,7 @@ class Solution {
         sum = sum/2;                // The total weight we want to achieve is '(total sum)/2'
         
         
-        boolean t[][] = new boolean[n+1][sum+1];           //Matrix is defined such that one item on each row and                                                            //one unit of weight on each column.
+        boolean t[][] = new boolean[n+1][sum+1];           //Matrix is defined such that one item on each row and one unit of weight on each column.
         
         for(int i=0; i<n+1; i++){           //This is initialization part.
             for(int j=0; j<sum+1; j++){
@@ -58,9 +58,9 @@ class Solution {
         
         int count = 0;
         
-        for(int i=0; i<n+1; i++){               // if last column has 'true' value more than once, it means  
-            if(t[i][sum] == true)               // 'partition sum'can be achieve more than once. So return true.
+        for(int i=0; i<n+1; i++){              //if last column has 'true' value more than once, it means 'partition sum'can be achieve more than once. So return true.
                 count++;
+            if(t[i][sum] == true)               
         }
         
         if(count>1)
@@ -72,4 +72,47 @@ class Solution {
 
 Time complexity :  O(n *(sum/2) )
 Space complexity :  O(n *(sum/2) )
+
+******************************************************************************************************************************************************************
+
+// Same solution as above, with just a small modification at the end :----------------------------------------
+
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int n = nums.length, sum = 0;
+        for(int x:nums)                //Calculate the sum of all elements of array
+            sum += x;
+        
+        if(sum%2==1)                 // if sum is odd, array can not be partitioned into two subset with equal sum
+            return false;
+         
+        
+        sum = sum/2;                // The total weight we want to achieve is '(total sum)/2'
+        
+        
+        boolean t[][] = new boolean[n+1][sum+1];           //Matrix is defined such that one item on each row and one unit of weight on each column.
+        
+        for(int i=0; i<n+1; i++){           //This is initialization part.
+            for(int j=0; j<sum+1; j++){
+                if(i==0)                    //If items to pick is '0' then for all weights, value is 'false'
+                    t[i][j] = false;
+                if(j==0)                    //If weight to achieve is '0' then for all items, value is 'true'
+                    t[i][j] = true;
+            }
+        }
+        
+        for(int i=1; i<n+1; i++){               // logic to fill matrix of knapsack
+            for(int j=1; j<sum+1; j++){
+                if( nums[i-1] > j)
+                    t[i][j] = t[i-1][j];
+                else
+                    t[i][j] = t[i-1][j-nums[i-1]]  ||  t[i-1][j] ;
+            }
+        }
+        
+        return t[n][sum];                      // If we found that there is one subset with given weight , then it automatically idicates that the sum of other 
+                                               // remaining element is also equal to given weight. So, it is pure 'subset sum problem'
+    }
+}
+
 
