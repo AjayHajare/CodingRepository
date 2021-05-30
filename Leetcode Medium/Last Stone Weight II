@@ -1,0 +1,85 @@
+You are given an array of integers stones where stones[i] is the weight of the ith stone. We are playing a game with the stones. On each turn, we choose any two 
+stones and smash them together. Suppose the stones have weights x and y with x <= y. The result of this smash is:
+    If x == y, both stones are destroyed, and
+    If x != y, the stone of weight x is destroyed, and the stone of weight y has new weight y - x.
+At the end of the game, there is at most one stone left.
+Return the smallest possible weight of the left stone. If there are no stones left, return 0.
+
+
+Example 1:
+
+Input: stones = [2,7,4,1,8,1]
+Output: 1
+Explanation:
+We can combine 2 and 4 to get 2, so the array converts to [2,7,1,8,1] then,
+we can combine 7 and 8 to get 1, so the array converts to [2,1,1,1] then,
+we can combine 2 and 1 to get 1, so the array converts to [1,1,1] then,
+we can combine 1 and 1 to get 0, so the array converts to [1], then that's the optimal value.
+
+Example 2:
+
+Input: stones = [31,26,33,21,40]
+Output: 5
+
+Example 3:
+
+Input: stones = [1,2]
+Output: 1
+
+
+Constraints:
+
+    1 <= stones.length <= 30
+    1 <= stones[i] <= 100
+
+************************************************************************************************************************************************************************
+
+// The approach used for this question is same as "416. Partition Equal Subset Sum" .
+
+class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        int totalSum = 0;
+        
+        for(int x: stones){                     //Calculate the total sum of all elements of array
+            totalSum += x;
+        }
+        
+        int W = totalSum/2;                     //The total weight we want to achieve is '(total sum)/2', becuase after making                                                         //partition of equal sum, the sum for each partition is  'half of total sum'.
+        
+        int n = stones.length;
+        boolean t[][] = new boolean[n+1][W+1];      //Define table for DP 
+                
+        for(int i=0; i<n+1; i++){           //This is initialization part.
+            for(int j=0; j<W+1; j++){
+                if(i==0)                    //If items to pick is '0' then for all weights, value is 'false'
+                    t[i][j] = false;
+                if(j==0)                    //If weight to achieve is '0' then for all items, value is 'true'
+                    t[i][j] = true;
+            }
+        }
+        
+        for(int i=1; i<n+1; i++){                       //Block of code to fill table for knapsack
+            for(int j=1; j<W+1; j++){
+                if(stones[i-1] > j)
+                    t[i][j] = t[i-1][j];
+                else
+                    t[i][j] = t[i-1][j] | t[i-1][j-stones[i-1]];
+            }
+        }
+        
+        int diff = 0;
+        for(int j=W; j>=0; j--){              //The last row represet subproblem - whether each column capacity is achievable or not                                                 //by including all elements of given array. So, we start from end column(mid of sum 'W') 
+                                              //and check for maximum sum which achievable. This sum is 'j' here.
+            if(t[n][j] == true ){
+                diff = totalSum - 2 * j;      //now 'diff' is calculated. Formula from 'Aditya verma-Min subset sum diff' video
+                break;
+            }
+        }
+        
+        return diff;
+    }
+}
+
+
+Time Complexity : O(n*W)
+Space Complexity : O(n*W)
