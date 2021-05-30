@@ -33,7 +33,8 @@ class Solution {
             return false;
          
         
-        sum = sum/2;                // The total weight we want to achieve is '(total sum)/2'
+        sum = sum/2;                // The total weight we want to achieve is '(total sum)/2', becuase after making partition of equal sum, the sum for each partition 
+                                    // is  'half of total sum'.
         
         
         boolean t[][] = new boolean[n+1][sum+1];           //Matrix is defined such that one item on each row and one unit of weight on each column.
