@@ -1,0 +1,94 @@
+You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+You may assume that you have an infinite number of each kind of coin.
+
+Example 1:
+Input: coins = [1,2,5], amount = 11
+Output: 3
+Explanation: 11 = 5 + 5 + 1
+
+Example 2:
+Input: coins = [2], amount = 3
+Output: -1
+
+Example 3:
+Input: coins = [1], amount = 0
+Output: 0
+
+Example 4:
+Input: coins = [1], amount = 1
+Output: 1
+
+Example 5:
+Input: coins = [1], amount = 2
+Output: 2
+
+Constraints:
+    1 <= coins.length <= 12
+    1 <= coins[i] <= 231 - 1
+    0 <= amount <= 104
+
+**********************************************************************************************************************************************************************
+
+//It is a qustion of unbounded knapsack beacuse 1 coin can be choosen multiple time. Most important part of the question is INITIALIZATION.
+
+//Bottom Up DP :--------------------------------------
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int t[][] = new int[n+1][amount+1];
+        
+        for(int j=0; j<amount+1; j++){                
+            t[0][j] = Integer.MAX_VALUE - 1;            //if the value of coins is 'zero', then to build up amount 'infinite' coins will be needed. The infinite int
+        }                                               //is represented by 'Integer.MAX_VALUE'. We take value with '-1' becuase we need to add '1' while filling the
+                                                        //data in table and adding 1 to 'Integer.MAX_VALUE' will make it overflow for int variable.
+        
+        for(int i=1; i<n+1;i++){                       //if the amount to be generated is '0', then no of coins needed is also '0' irrespective of value of coins.
+            t[i][0] = 0;
+        }
+        
+        for(int i=1; i<n+1; i++){
+            for(int j=1; j<amount+1; j++){
+                if(coins[i-1] > j)
+                    t[i][j] = t[i-1][j];
+                else
+                    t[i][j] = Math.min( 1 + t[i][j - coins[i-1]], t[i-1][j]);      //Question asks 'fewest number of coins', hence we took minimum. 
+            }                                                                      //'1' is added becuase when we choose a coin, it will increase number of coin by '1'
+        }
+        
+        if(t[n][amount] == Integer.MAX_VALUE - 1)                                 //The last block has 'infinite' value, it means the amout is not possible by given
+            return -1;                                                            //coins, hence we return '-1' as per question.
+        
+        return t[n][amount];
+    }
+}
+
+*******************************************************************************************************************************************************************
+
+//This recursive solution I formed with help of above DP solution :-----------------------------------------
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int res = count(coins, amount, coins.length);
+        if(res == Integer.MAX_VALUE - 1)
+            return -1;
+        return res;
+    }
+    
+    public static int count(int coins[], int amount, int n){
+        if(n==0)
+            return Integer.MAX_VALUE - 1;
+        
+        if(amount==0)
+            return 0;
+        
+        if(coins[n-1] > amount)
+            return count(coins, amount, n-1);
+        else
+            return Math.min( 1+count(coins, amount-coins[n-1], n), count(coins, amount, n-1));
+    }
+}
+
+
+
