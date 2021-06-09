@@ -69,7 +69,7 @@ Time Complexity :  It has one loop only. So, complexity is O(n).
 
 *******************************************************************************************************************************************************************************
 
-//Third approach is same as second approach. Only 'division' is replaced with  'left shift(>>)' and  'modulus(%)' is replaced with 'Bitwise AND (&)'. 
+//Third approach is same as second approach. Only 'division' is replaced with  'right shift(>>)' and  'modulus(%)' is replaced with 'Bitwise AND (&)'. 
 
 class Solution {
     public int[] countBits(int num) {
