@@ -1,0 +1,169 @@
+Given a boolean expression S of length N with following symbols.
+Symbols
+    'T' ---> true
+    'F' ---> false
+and following operators filled between symbols
+Operators
+    &   ---> boolean AND
+    |   ---> boolean OR
+    ^   ---> boolean XOR
+Count the number of ways we can parenthesize the expression so that the value of expression evaluates to true.
+
+Example 1:
+Input: N = 7
+S = T|T&F^T
+Output: 4
+Explaination: The expression evaluates 
+to true in 4 ways ((T|T)&(F^T)), 
+(T|(T&(F^T))), (((T|T)&F)^T) and (T|((T&F)^T)).
+
+Example 2:
+Input: N = 5
+S = T^F|F
+Output: 2
+Explaination: ((T^F)|F) and (T^(F|F)) are the 
+only ways.
+
+Your Task:
+You do not need to read input or print anything. Your task is to complete the function countWays() which takes N and S as input parameters and returns number 
+of possible ways modulo 1003.
+
+Expected Time Complexity: O(N^2)
+Expected Auxiliary Space: O(N^2)
+
+Constraints:
+1 ≤ N ≤ 200
+
+********************************************************************************************************************************************************************
+
+//Recursive code which gives tle  :------------------------------
+
+class Solution{
+    static int countWays(int N, String S){
+        return solve(S, 0, N-1, true);
+    }
+    
+    static int solve(String S, int i, int j, boolean isRequired){
+        int ans = 0;
+        
+        if(i>j)
+            return 0;
+        
+        if(i==j){
+            if(isRequired==true)
+                return  (S.charAt(i) == 'T') ? 1 : 0;
+            else
+                return  (S.charAt(i) == 'F') ? 1 : 0;
+        }
+        
+        for(int k=i+1; k<=j-1; k+=2){
+            int lt, lf, rt, rf;
+            
+            lt = solve(S, i, k-1, true);
+            lf = solve(S, i, k-1, false);
+            rt = solve(S, k+1, j, true);
+            rf = solve(S, k+1, j, false);
+            
+            
+            if(S.charAt(k) == '&'){
+                if(isRequired == true)
+                    ans += lt*rt;
+                else
+                    ans += lt*rf + lf*rt + lf*rf;
+            }
+            
+            if(S.charAt(k) == '|'){
+                if(isRequired == true)
+                    ans += lt*rt + lt*rf + lf*rt;
+                else
+                    ans += lf*rf;
+            }
+            
+            if(S.charAt(k) == '^'){
+                if(isRequired == true)
+                    ans += lt*rf + lf*rt;
+                else
+                    ans += lt*rt + lf*rf;
+            }
+        }
+        return ans;
+    }
+}
+
+Time complexity : O(4^n),   there are 4 recursive call in function and each recursive call executes a loop which takes O(n) time.
+Space Complexity : O(n),    where 'n' is length of the string.
+
+**********************************************************************************************************************************************************************
+
+
+//Memoization code  :-------------------------
+
+
+class Solution{
+   static int[][][] dp;
+   
+   static int countWays(int N, String S){
+        dp=new int[N+1][N+1][2];
+        
+        for(int i=0;i<S.length();i++)
+          for(int j=0;j<S.length();j++)
+            for(int k=0;k<2;k++)
+              dp[i][j][k]=-1;
+        
+        return solve(S,0,S.length()-1,1);
+    }
+    
+    
+    static int solve(String s,int i,int j,int istrue){
+        if(i>j)
+            return 0;
+        
+        if(dp[i][j][istrue]!=-1) 
+            return dp[i][j][istrue];
+            
+        if(i==j){
+            if(istrue==1)
+                return  (s.charAt(i) == 'T') ? 1 : 0;
+            else
+                return  (s.charAt(i) == 'F') ? 1 : 0;
+        }
+
+        int ans=0;
+        for(int k=i+1;k<=j-1;k+=2){
+            int lt =solve(s, i, k-1, 1);
+            int lf = solve(s, i, k-1, 0);
+             int rt = solve(s, k+1, j, 1);
+            int rf = solve(s, k+1, j, 0);
+            if(s.charAt(k)=='&'){
+                if(istrue==1){
+                    ans+=(lt*rt);
+                }else{
+                    ans+=(lt*rf+lf*rt +lf*rf);
+                }
+            }
+            else if(s.charAt(k)=='|'){
+                if(istrue==1){
+                    ans+=(lt*rt+lf*rt+rf*lt);
+                }else{
+                    ans+=(lf*rf);
+                }
+            }
+            else if(s.charAt(k)=='^'){
+                if(istrue==1){
+                    ans+=(lt*rf+lf*rt);
+                }else{
+                    ans+=(lt*rt+lf*rf);
+                }
+            }
+        }
+        
+        return dp[i][j][istrue]=ans%1003;
+    }
+}
+
+Time Complexity : O(n^2),  Since the last dimension dosen't depend on the input. its will be true or false. only 2 option so we can consider it to be constant. 
+                           So the time complexity will be O(n^2)
+                           
+Space Complexity : O(n^2), same reason as above
+
+
