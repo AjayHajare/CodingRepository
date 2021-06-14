@@ -59,6 +59,8 @@ class Solution {
 }    
 
 /*
+POINT TO NOTE -  here, 'Hypotheeis' is a part which is responssible to call the height fucntion and each and every node of the tree.
+
 'tempAns' holds the value which Node will return to its parent. It is max height of tree with root as 'current node'. And '1' is added to include the height of 'current node'
 'ans' holds the value of the diameter of tree with root is 'current node'
 'result' holds the value of maximum out of (ans, result). As the 'result' is global, this updated value is used during next recursive call 
