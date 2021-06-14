@@ -18,6 +18,8 @@ The number of nodes in the tree is in the range [1, 104].
 
 ***************************************************************************************************************************************************************************
 
+//According to Aditya Verma's DP series - video no 48   :------------------------------
+
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -34,27 +36,31 @@ The number of nodes in the tree is in the range [1, 104].
  * }
  */
 class Solution {
-    int max = Integer.MIN_VALUE;
-    
+    int result = Integer.MIN_VALUE;                                 //It is declared global becuase we want its value to retain during each recursive call. 
+                                                                    //Becuase it is the final ans that we want.
     public int diameterOfBinaryTree(TreeNode root) {
-        maxDepth(root);
-        return max;                     //Find out the child which is at max distance from the leaf node
+        height(root);                                              
+        return result;
     }
     
-    public int maxDepth(TreeNode root){
-        if(root==null) 
+    public int height(TreeNode root){
+        if(root == null)                                           //Bace Condition
             return 0;
         
-        int l = maxDepth(root.left);            // 'left' child return its maxDepth from leaf
-        int r = maxDepth(root.right);           // 'right' child return its maxDepth from leaf
+        int l = height(root.left);                                //Hypothesis
+        int r = height(root.right);
         
-        max = Math.max( (l + r), max );         
+        int tempAns = 1 + Math.max( l, r );                       //Induction    
+        int ans = l+r;
+        result = Math.max(ans, result);
         
-        return (1 + Math.max(l , r));           
-        
-        /*
-        return max in diameterOfBinaryTree because it is the length of both subtrees (the case of running through a root node).
-        Returning 'Math.max(left, right) + 1' from maxDepth just guarantees that the recursive nature will give us the largest path in that subtree.
-        */
+        return tempAns;
     }
-}
+}    
+
+/*
+'tempAns' holds the value which Node will return to its parent. It is max height of tree with root as 'current node'. And '1' is added to include the height of 'current node'
+'ans' holds the value of the diameter of tree with root is 'current node'
+'result' holds the value of maximum out of (ans, result). As the 'result' is global, this updated value is used during next recursive call 
+*/
+ 
