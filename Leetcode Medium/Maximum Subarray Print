@@ -109,12 +109,12 @@ class Solution {
     ArrayList<Integer> findSubarray(int a[], int n) {
         long sum=0;
         long resSum=0;
-        ArrayList<Integer> res = new ArrayList<Integer>();
-        ArrayList<Integer> temp = new ArrayList<Integer>();
+        ArrayList<Integer> res = new ArrayList<Integer>();                      //List to store the final result
+        ArrayList<Integer> temp = new ArrayList<Integer>();                     //List to temporary subarray which will be copied in 'res' when its sum is greater 
+                                                                                //reuslt sum (resSum).        
         
-        
-        int flag = 0;
-        for(int i=0; i<a.length; i++){
+        int flag = 0;                                                          //This block of code is used to check whether given array has any positive integer
+        for(int i=0; i<a.length; i++){                                         //If there is no any positive integer, then return List containing '-1'
             if(a[i] >= 0){
                 flag=1;
                 break;
@@ -127,16 +127,16 @@ class Solution {
            
         
         for(int i=0; i<a.length; i++){
-            if(a[i] < 0){
+            if(a[i] < 0){                                              //We will copy 'temp' in 'res' when we come accross any negative numbers.
                 if(resSum<sum){
                     copyResult(temp, res);
                     resSum = sum;
                 }
-                sum = 0;
+                sum = 0;                                              //Once we copied the 'temp' in 'res', then we will make 'sum=0' and we clear the 'temp' List
                 temp.clear();
             }
-            else if( sum+a[i] > a[i] ){
-                sum = sum+a[i];
+            else if( sum+a[i] > a[i] ){                              //The codition is same as we used in kadane's algo. Everytime we update the 'sum', we wil add
+                sum = sum+a[i];                                      //that element in the 'temp' List.
                 temp.add(a[i]);
             }
             else{
@@ -145,9 +145,9 @@ class Solution {
             }
         }
         
-        if(resSum < sum)
-            copyResult(temp, res);
-        
+        if(resSum < sum)                                            //This condition is useful when all elements of given array is positive.
+            copyResult(temp, res);                                  //This condition also takes care of case when 'Maximum subarray' finishes at end of array after 
+                                                                    //a negative number.
         return res;
     }
 }
