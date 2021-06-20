@@ -83,7 +83,24 @@ class Solution {
 
 *********************************************************************************************************************************************************************
 
-//Miodification of above apporach to reduce time complexity :----------------------------------
+/*   
+Miodification of above apporach to reduce time complexity :----------------------------------
+In this apporach, instead of using just a single variable to store max element, we used deque. In the Deque, we add and remove elements at both the ends.
+
+If we can add and remove elements from both sides of the sliding window, we can solve this problem in linear time. It turns out that we can use Deque to achieve this.  
+
+Basically, for each element nums[i] in the array that we are about to insert, we first check whether the leftmost index in the sliding window is out of bound. 
+If so, we remove it by pollFirst() in constant time. 
+
+Then we continuously remove the rightmost indices if their corresponding elements are less than nums[i] (the element we are about to insert). The idea is that the 
+elements that are less than the element we'll insert won't have any contributions to the maximum element of the sliding window. So it is safe to remove them.
+
+After removal pollLast() and insertion addLast(i) (the element nums[i]), we can say that the leftmost element in the window is maximum. Beacuase the while loop 
+removes all the elements from dequeue which are less than current array elemnt and then insert the currnet array element in the deque.
+
+Last but not least, adding the maximum elements to the result array when necessary.
+
+*/
 
 class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
@@ -93,19 +110,19 @@ class Solution {
         
         int t = 0;
         for(int i = 0; i < nums.length; i++){
-        	while(!q.isEmpty() && q.peekLast() < nums[i]){
-        		q.pollLast(); // The only change which I did !
-        	}
+        	   while(!q.isEmpty() && q.peekLast() < nums[i]){
+        		     q.pollLast(); 
+        	   }
         
             q.addLast(nums[i]);
         	
             if(i > k - 1 && q.peekFirst() == nums[i - k]){
-        		q.pollFirst();
-        	}
+        		      q.pollFirst();
+        	   }
         	
             if(i >= k - 1){
-        		res[t++] = q.peekFirst();
-        	}	
+        		      res[t++] = q.peekFirst();
+        	   }	
         }
         return res;
     }
