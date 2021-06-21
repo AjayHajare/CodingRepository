@@ -27,27 +27,31 @@ So, now we have all our permutations which can be made by the digits 1, 2 and 3.
 It can be easily noticed that for the number 123, we are first making permutations of 23 first and for 23, permutations of 3 and so on. Thus, we are recurring 
 to make permutations here. So, recursion seems to be the most generic way to solve the problem.
 
+To store the anagrams, I used Hashset with the anagram itself as a key. 
+
 *********************************************************************************************************************************************************************
 
 
 import java.util.*;
 
 public class Main{
-  public static List<String> anagrams = new ArrayList<String>();
-  static char word[];
+  	public static HashMap<String, Integer> anagrams = new HashMap<String, Integer>();
+    	static char word[];
     
 	public static void main(String[] args) {
-	    String s = "aac";
+	    String s = "abc";
 	    word = new char[s.length()];
 	    
 	    for(int i=0; i<s.length(); i++){
 	        word[i] = s.charAt(i);
 	    }
 	    
-	    System.out.println(word);
+	    System.out.println( "Given String : " + word);
 	    permutation(word, 0, s.length()-1);
 	    
-		  System.out.println(anagrams);
+	    System.out.println("Anagrams of String : ");
+	    for( String ana : anagrams.keySet() )				//Code to iterate through each element of HashSet
+		    System.out.print(ana + "\t");
 	}
 
 	public static void swap(char[] word, int k, int i){
@@ -58,11 +62,11 @@ public class Main{
 	
 	public static void permutation(char[] word, int i, int j){
 	    if(i==j){
-	        String temp = new String(word);
-	        anagrams.add( temp ) ;
+	        String temp = new String(word);				    	//Code to convert char array to a String
+	        anagrams.put( temp, 1 ) ;
 	        return;
 	    }
-	    
+
 	    for(int k=i; k<=j; k++){
 	        swap(word, k, i);
 	        permutation(word, i+1, j);
@@ -70,3 +74,6 @@ public class Main{
 	    }
 	}
 }
+
+Time Complexity :  O(n^n)
+Space complexity : O(n!)
