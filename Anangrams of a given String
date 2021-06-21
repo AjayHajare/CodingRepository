@@ -1,0 +1,72 @@
+Find all the anagram of given String.
+Example :
+String = cat
+Anagrams = cat, cta, act, atc, tac, tca
+
+
+******************************************************************************************************************************************************************
+Explaination :  https://www.codesdope.com/blog/article/generating-permutations-of-all-elements-of-an-arra/
+
+Let's make permutations of 1,2,3. One way I am going to make the permutation is: I will start by keeping the first number, i.e. 1, fixed, and will make permutations 
+of the other numbers. Thus the numbers obtained by keeping 1 fixed are:
+
+123
+132
+
+Now, we have all the numbers which can be made by keeping 1 at the first position. So, let's keep 2 at the first position this time and make the permutations.
+
+213
+231
+
+Similarly, keeping 3 at the first position, the numbers are:
+
+312
+321
+
+So, now we have all our permutations which can be made by the digits 1, 2 and 3.
+It can be easily noticed that for the number 123, we are first making permutations of 23 first and for 23, permutations of 3 and so on. Thus, we are recurring 
+to make permutations here. So, recursion seems to be the most generic way to solve the problem.
+
+*********************************************************************************************************************************************************************
+
+
+import java.util.*;
+
+public class Main{
+  public static List<String> anagrams = new ArrayList<String>();
+  static char word[];
+    
+	public static void main(String[] args) {
+	    String s = "aac";
+	    word = new char[s.length()];
+	    
+	    for(int i=0; i<s.length(); i++){
+	        word[i] = s.charAt(i);
+	    }
+	    
+	    System.out.println(word);
+	    permutation(word, 0, s.length()-1);
+	    
+		  System.out.println(anagrams);
+	}
+
+	public static void swap(char[] word, int k, int i){
+	    char temp = word[k];
+	    word[k] = word[i];
+	    word[i] = temp;
+	}
+	
+	public static void permutation(char[] word, int i, int j){
+	    if(i==j){
+	        String temp = new String(word);
+	        anagrams.add( temp ) ;
+	        return;
+	    }
+	    
+	    for(int k=i; k<=j; k++){
+	        swap(word, k, i);
+	        permutation(word, i+1, j);
+	        swap(word, k, i);
+	    }
+	}
+}
