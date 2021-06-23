@@ -1,0 +1,164 @@
+Given two strings s and p, return an array of all the start indices of p's anagrams in s. You may return the answer in any order.
+
+Example 1:
+Input: s = "cbaebabacd", p = "abc"
+Output: [0,6]
+Explanation:
+The substring with start index = 0 is "cba", which is an anagram of "abc".
+The substring with start index = 6 is "bac", which is an anagram of "abc".
+
+Example 2:
+Input: s = "abab", p = "ab"
+Output: [0,1,2]
+Explanation:
+The substring with start index = 0 is "ab", which is an anagram of "ab".
+The substring with start index = 1 is "ba", which is an anagram of "ab".
+The substring with start index = 2 is "ab", which is an anagram of "ab".
+
+Constraints:
+    1 <= s.length, p.length <= 3 * 104
+    s and p consist of lowercase English letters.
+
+**********************************************************************************************************************************************************************
+
+//Brute Force :
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> lst = new ArrayList<>();
+        
+        int l = p.length();
+        char[] arr = p.toCharArray();
+        Arrays.sort(arr);
+        String newstr = new String(arr);
+        
+        for(int i=0;i<=s.length()-l;i++){
+            String str = s.substring(i,i+l);
+            char[] arr2 = str.toCharArray();
+            Arrays.sort(arr2);
+            String str2 = new String(arr2);
+            if(str2.equals(newstr)){
+                lst.add(i);
+            }
+        }
+        
+        return lst;
+    }
+ }
+ 
+ *********************************************************************************************************************************************************************
+    
+
+//Program according to format given by Aditya Verma. But has some issue as not able to pass for below testcase and I am not able to figure out why :
+//        String s = "dinitrophenylhydrazinetrinitrophenylmethylnitramine";
+//        String p = "trinitrophenylmethylnitramine";
+
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        int plen = p.length();
+        HashMap<Character, Integer> map1 = new HashMap<Character, Integer>();
+        
+        for(int i=0; i<plen; i++){
+            if(!map1.isEmpty() && map1.containsKey(p.charAt(i))){
+                int temp = map1.get(p.charAt(i));
+                map1.put(p.charAt(i), ++temp);
+            }    
+            else{
+                map1.put(p.charAt(i), 1);
+            }
+        }
+        
+        int count = map1.size();
+        int i=0,j=0;
+        while( j<s.length() ){
+                if(map1.containsKey(s.charAt(j))){
+                    int temp = map1.get(s.charAt(j));
+                    map1.put(s.charAt(j), --temp);
+                    if(map1.get(s.charAt(j)) == 0){
+                        --count;
+                   }
+                }    
+                
+                if(j-i+1 < plen){
+                    j++;
+                }
+            
+                else if(j-i+1 == plen){
+                    if(count==0)
+                        res.add(i);
+                    if(map1.containsKey(s.charAt(i))){
+                        int temp = map1.get(s.charAt(i));
+                        map1.put(s.charAt(i), ++temp);
+                        if(map1.get(s.charAt(i)) > 0)
+                            ++count;
+                    }
+                    
+                    i++;
+                    j++;
+                }
+            }
+        return res;
+    }
+}
+
+********************************************************************************************************************************************************************
+
+
+//Correct program of above approach with some modification in for loop. It passes all test cases  :----------------------
+
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        
+        HashMap<Character,Integer> map=new HashMap<Character,Integer>();
+        
+        if(p.length()>s.length())                                // input invalid as p size >s size 
+            return new ArrayList<Integer>();
+
+         
+        for(int k=0;k<p.length();k++){                          // set all strings of p in map and for each occurence of character in p increment the value in the map
+            if(map.containsKey(p.charAt(k))){
+                map.put(p.charAt(k),map.get(p.charAt(k))+1);
+            }
+            else 
+            {
+                map.put(p.charAt(k),1);
+            }
+        }
+        
+        
+        int i=0, j=0, count=map.size();
+        List<Integer> list=new ArrayList<Integer>();
+        
+        while(j<s.length()){
+       
+            if(map.containsKey(s.charAt(j))){
+                map.put(s.charAt(j),map.get(s.charAt(j))-1);        
+             
+            if(map.get(s.charAt(j))==0)                             // Decrement count in map only if the value of character in the map is 0 
+                count--;
+            }
+            
+            while(count==0){
+                if(j-i+1==p.length())                               //If j-i+1 is the size of p
+                    list.add(i);                                    //record start index i of anagram
+                
+                if(map.containsKey(s.charAt(i))){    
+                    map.put(s.charAt(i),map.get(s.charAt(i))+1);     // record the occurence of character at index i in map
+                     
+                    if(map.get(s.charAt(i))>0)                       // make the count invalid
+                        count++;
+                }
+                
+                i++;
+            }
+            
+            j++;
+            
+        }
+        return list;
+    }
+
+}
