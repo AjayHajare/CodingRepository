@@ -1,0 +1,48 @@
+Given an array of integers nums and an integer k, return the total number of continuous subarrays whose sum equals to k.
+
+Example 1:
+Input: nums = [1,1,1], k = 2
+Output: 2
+
+Constrains :
+0 < nums[i] < 1000
+
+
+*********************************************************************************************************************************************************************
+
+//This is the "Variable size sliding window" approach only work for positive numbers greater than 0 :-----------------
+
+
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int result = 0;
+        int i=0, j=0, currentSum = 0;
+        
+        while(j<nums.length){
+            currentSum += nums[j];                      //CALCULATIONS
+            
+            if(currentSum < k){                        //COMMON STEP FOR EVERY SLIDING WINDOW
+                j++;
+            }
+            
+            else if(currentSum == k){                 //Case when given condition hit
+                currentSum = 0;
+                result++;  
+                i++;
+            }
+            
+            else if(currentSum > k){
+                while(currentSum > k){
+                    currentSum -= nums[i];
+                    i++;
+                    if(currentSum == k){
+                        result++;
+                    }
+                }
+                j++;
+            }
+        }
+        
+        return result;
+    }
+}
