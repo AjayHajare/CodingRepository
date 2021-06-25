@@ -26,9 +26,8 @@ class Solution {
             }
             
             else if(currentSum == k){                 //Case when given condition hit
-                currentSum = 0;
                 result++;  
-                i++;
+                j++;
             }
             
             else if(currentSum > k){
