@@ -66,3 +66,45 @@ class Solution{
         return mx;
     }
 }
+
+Time Complexity: O(|S|)
+Auxiliary Space: O(|S|) 
+
+**********************************************************************************************************************************************************************
+
+//Approach by Aditya Verma, similar to "Longest substring with k different characters". But this give 'tle' in geeksforgeeks.
+
+
+class Solution{
+    int longestUniqueSubsttr(String S){
+        int mx = 0;
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        
+        int i=0, j=0;
+        
+        while(j<S.length()){
+            map.put(S.charAt(j), map.getOrDefault(S.charAt(j), 0)+1 );
+            
+            if(map.size() == j-i+1){
+                mx = Math.max(mx, map.size());
+                j++;
+            }
+            else if(map.size() > j-i+1){
+                while(map.size() > j-i+1){
+                    map.put(S.charAt(i), map.get(S.charAt(i))-1);
+                    if(S.charAt(i)==0)
+                        map.remove(S.charAt(i));
+                    i++;
+                }
+                j++;
+            }
+        }
+        
+        return mx;
+    }
+}
+
+
+Time Complexity: O(|s|* log|s|) , map operations take O(n*logn) time in general cases.. in this case it will be O(|s|* log|s|). 
+Auxiliary Space: O(|S|)
+
