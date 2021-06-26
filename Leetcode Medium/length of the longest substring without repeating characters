@@ -1,0 +1,68 @@
+Given a string S, find the length of the longest substring without repeating characters.
+
+Example 1:
+Input:
+S = "geeksforgeeks"
+Output:
+7
+Explanation:
+Longest substring is
+"eksforg".
+
+Example 2:
+Input:
+S = "abdefgabef"
+Output:
+6
+Explanation:
+Longest substring are
+"abdefg" , "bdefga" and "defgab".
+
+
+Your Task:
+You don't need to take input or print anything. Your task is to complete the function longestUniqueSubsttr() which takes a string S as and returns the length of the 
+longest substring.
+ 
+
+Expected Time Complexity: O(|S|).
+Expected Auxiliary Space: O(K) where K is constant.
+
+Constraints:
+1 ≤ |S| ≤ 10^5
+It is guaranteed that all characters of the String S will be lowercase letters from 'a' to 'z'
+
+************************************************************************************************************************************************************************
+
+//This is a sliding window approach completely created by own.
+
+class Solution{
+    int longestUniqueSubsttr(String S){
+        int mx = 0;
+        
+        Set<Character> set = new HashSet<Character>();
+        set.add(S.charAt(0));                                                 //First Character of String is added to Set.
+        
+        int i=0, j=1; 
+        while(j<S.length()){                                                  //As first char is already added, 'j' is started by 1.
+            if(set.contains(S.charAt(j))){
+                mx = Math.max( mx, j-i);
+                while(!set.isEmpty() && set.contains(S.charAt(j))){           //If 'j' char already present in Set, then we remove ith char from set and increament 'i'
+                    set.remove(S.charAt(i));                                  //this process continues until all char and previous occurence of 'j' is removed.
+                    i++;                                                      //Ex: "abcdhcbayr"- when we reach second 'c' we will remove 'a','b','c' from Set.
+                }
+                set.add(S.charAt(j));                                         //After removing all char and previous occurence of 'j', we will add curren 'j' in Set
+            }
+            else{
+                set.add(S.charAt(j));
+            }
+            j++;
+        }
+        
+        mx = Math.max( mx, j-i);                                            //This will cover the case, when Longest substring is continues till end of given string.
+        
+        if(set.size() == S.length())                                        //This will cover the case, when all char in string are unique.
+            return set.size();
+        
+        return mx;
+    }
+}
