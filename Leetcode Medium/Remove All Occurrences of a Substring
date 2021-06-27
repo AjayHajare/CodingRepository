@@ -64,6 +64,5 @@ class Solution {
     }
 }
 
-Time complexity :  Worst case is when 's' and 'part' are same, then complexity will be O(n^2).
-                   Otherwise average case O(n).
+Time complexity :  O(n)
 Space complexity : O(1)
