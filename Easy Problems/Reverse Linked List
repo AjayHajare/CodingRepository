@@ -1,0 +1,73 @@
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+Example 1:
+Input: head = [1,2,3,4,5]
+Output: [5,4,3,2,1]
+
+Example 2:
+Input: head = [1,2]
+Output: [2,1]
+
+Example 3:
+Input: head = []
+Output: []
+ 
+Constraints:
+The number of nodes in the list is the range [0, 5000].
+-5000 <= Node.val <= 5000
+
+*******************************************************************************************************************************************************************************
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+// Better Approach using extra stack with time complexity O(n) and space complexity O(n):------------------------------------
+
+class Solution{
+    public ListNode reverseList(ListNode head){
+        
+        Stack<Integer> stk = new<Integer> Stack();
+        
+        ListNode temp=head;
+        while(temp!=null){
+            stk.push(temp.val);
+            temp = temp.next;
+        }
+        
+        temp = head;
+        while(temp!=null){
+            temp.val = stk.pop();
+            temp = temp.next;
+        }
+        
+        return head;
+    }
+}
+
+****************************************************************************************************************************************************************************
+
+//  Optimal Approach with time complexity O(n) and space complexity O(1)  :--------------------------------
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode p = null;      //Predessor node
+        ListNode c = head;      //Current node
+        ListNode s = null;      //Sucessor node
+        
+        while(c != null){
+            s = c.next;
+            c.next = p;
+            p = c;
+            c = s;
+        }
+        return p;
+    }
+}

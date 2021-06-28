@@ -1,0 +1,84 @@
+Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+Follow up: Could you implement a solution with a linear runtime complexity and without using extra memory?
+
+Example 1:
+Input: nums = [2,2,1]
+Output: 1
+
+Example 2:
+Input: nums = [4,1,2,1,2]
+Output: 4
+
+Example 3:
+Input: nums = [1]
+Output: 1
+ 
+Constraints:
+1 <= nums.length <= 3 * 104
+-3 * 104 <= nums[i] <= 3 * 104
+Each element in the array appears twice except for one element which appears only once.
+
+********************************************************************************************************************************************************************************
+
+First Approach by using hashMap  :-------------------------------------------
+class Solution {
+    public int singleNumber(int[] nums) {
+        HashMap<Integer, Integer> hash = new<Integer, Integer> HashMap();
+        
+        for(int x : nums){
+            if(hash.containsKey(x)){       //if hashmap contains 'element', then increase correspoding val
+                int count = hash.get(x);
+                hash.put(x, ++count);
+            }
+            else
+                hash.put(x, 1);           //if hashmap does not contain  'element', then put it in hashmap
+        }
+        
+        for(int x : hash.keySet()){       //Iterate through 'keys' of HashMap
+            if(hash.get(x)==1)            //if 'value' for 'key' is '1', then return that 'key' element
+                return x;
+        }
+        
+        return -1;
+    }
+}
+
+Time Complexity : O(nlogn) , as there is a for loop and inside for loop 'hash.containsKey' 
+Space Complexity : O(n)  ,  as HashMap of size nearly 'n/2' is used
+
+**************************************************************************************************************************************************************************
+
+Second Approach by using 'Sort()' method :---------------------------------------------------
+class Solution {
+    public int singleNumber(int[] nums) {
+        Arrays.sort(nums);                          //Sort the array
+        for(int i=0 ; i<nums.length-1; i+=2){       
+            if(nums[i]!=nums[i+1])                  //Check pairwise values in array
+                return nums[i];                     //if any pairwise values are different, then it is answer
+        }
+        return nums[nums.length - 1];       //if answer is largest value, then it will not be detected in above loop hence return it here
+   }
+}
+
+Time Complexity : O(nlogn) , as 'sort()' method is used 
+Space Complexity : O(1)  ,  as No extra space is used other than some constant
+
+***************************************************************************************************************************************************************************
+
+
+Optimal Approach by using 'XOR'  :------------------------
+class Solution {
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        for(int x: nums){
+            result = result ^ x;
+        }
+        return result;
+    }
+}
+
+
+Bitwise 'XOR' gives zero when both inputs are same. And if we apply XOR for 'zero' and 'any number', it will give output as that number itself. So if the array is {4,1,2,1,2} then 'XOR' operation is
+        ((2^2)^(1^1)^(4)) => (0^0^4) => 4
+Time Complexity : O(n) , as only one 'for'loop
+Space Complexity : O(1)  , as No extra space is used other than some constant

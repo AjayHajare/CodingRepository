@@ -1,0 +1,65 @@
+Given the head of a singly linked list, return true if it is a palindrome.
+
+Example :
+Input: head = [1,2,2,1]
+Output: true
+
+Constraints:
+The number of nodes in the list is in the range [1, 105].
+0 <= Node.val <= 9
+
+**********************************************************************************************************************************************************
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        
+        while(fast != null && fast.next != null){
+            slow = slow.next;          
+            fast = fast.next.next;                  //'fast' increaments by two spaces and 'slow' increaments by 1 space. Hence when 'fast' is at the end of list, 'slow' is 
+                                                    //at middle of list
+        }
+        
+        ListNode newHead = reverse(slow);               // Reverse the list from middle onwards
+        
+        while( head != null && newHead != null){
+            if(head.val == newHead.val){                //Compare left half & right half after reversing
+                head = head.next;
+                newHead = newHead.next;
+            }
+            else{
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    public ListNode reverse(ListNode head){
+        ListNode p = null;                            //Predessive node
+        ListNode c = head;                            //Current node
+        ListNode s = null;                            //Successive node
+        
+        while(c != null){
+            s = c.next;
+            c.next = p;
+            p = c;
+            c = s;
+        }
+        
+        return p;
+    }
+}
+

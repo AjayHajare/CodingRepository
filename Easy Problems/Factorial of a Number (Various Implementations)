@@ -1,0 +1,41 @@
+public class HelloWorld{
+     static long f[] = new long[45];
+     
+     public static void main(String []args){
+         f[0] = 1;
+        System.out.println(new HelloWorld().fact(45));
+     }  
+     
+     //Dynamic Programming function for factorial -
+     
+     long factDynamic(int x){
+         if(f[x-2]>0){
+            f[x-1] = x * f[x-2];
+            return f[x-1];
+         }
+         
+         else
+            return x*factDynamic(x-1);
+     }
+ }
+ ********************************************************************************************************************************************************
+ 
+     /* 'long' type can calculate factorial upto 21, for bigger number need to use BitInteger.*/
+ 
+ import java.math.BigInteger;
+ 
+ public class HelloWorld{
+     public static void main(String []args){
+        System.out.println(new HelloWorld().fact(45));
+     }
+     
+     //Iterative funcion for factorial - 
+     
+     BigInteger fact(int x){
+         BigInteger b=BigInteger.ONE;
+         for(int i=2; i<=x; i++){
+             b = b.multiply(BigInteger.valueOf(i));
+         }
+         return b;
+     }   
+}
