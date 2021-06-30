@@ -50,9 +50,9 @@ public class Main
 		
 	// Part 3 :  BREADTH FIRST SEARCH starts here
 		int visited[] = new int[n+1];
-		ArrayList<Integer> dfs = new ArrayList<Integer>();
+		ArrayList<Integer> bfs = new ArrayList<Integer>();
 		
-	  //The code for dfs is as below, as per dfs algorithm  :-----------
+	  //The code for bfs is as below, as per bfs algorithm  :-----------
 	    	Queue<Integer> q = new LinkedList<Integer>();
 		        q.add(1);
 		        
@@ -60,15 +60,15 @@ public class Main
 		            int node = q.poll();
 		            if(visited[node] == 0){
 		                visited[node] = 1;
-		                dfs.add(node);
+		                bfs.add(node);
 		                
 		                for(int x : adj.get(node)){
 		                    q.add(x);
 		                }
 		            }
 		        }
-	        System.out.print("DFS traversal sequence : ") ;
-	        for(int x : dfs)
+	        System.out.print("BFS traversal sequence : ") ;
+	        for(int x : bfs)
 	            System.out.print(x+"\t");
 
    }
@@ -88,10 +88,10 @@ Enter Edges :
 5 7
 
 Output -
-DFS traversal sequence : 1  4  
+BFS traversal sequence : 1  4  
 
 Explanation -
-As per given info, there are 3 components:  [1,4]   [2,3,5,7]   [6] .   But the dfs returned all nodes of component in which source is present.
+As per given info, there are 3 components:  [1,4]   [2,3,5,7]   [6] .   But the bfs returned all nodes of component in which source is present.
 
 
 ********************************************************************************************************************************************************************
@@ -145,7 +145,7 @@ public class Main
 		
 	// Part 3 :  BREADTH FIRST SEARCH starts here
 		int visited[] = new int[n+1];
-		ArrayList<Integer> dfs = new ArrayList<Integer>();
+		ArrayList<Integer> bfs = new ArrayList<Integer>();
 		
     int countConnectedComponents = 0;		        
 		for(int i=1; i<=n; i++){
@@ -169,8 +169,8 @@ public class Main
 		    }
 		}
 		
-		System.out.print("DFS traversal sequence : ") ;
-	    for(int x : dfs)
+		System.out.print("BFS traversal sequence : ") ;
+	    for(int x : bfs)
 	        System.out.print(x+"\t");
 		
 	    System.out.print("No of connected componenets : "+countConnectedComponents ) ;
@@ -191,7 +191,7 @@ Enter Edges :
 5 7
 
 Output -
-DFS traversal sequence : 1  4  2  3  5  7  6
+BFS traversal sequence : 1  4  2  3  5  7  6
 No of connected componenets : 3
 
 
