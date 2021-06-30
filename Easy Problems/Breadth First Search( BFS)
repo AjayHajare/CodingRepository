@@ -1,0 +1,201 @@
+In BFS, we start traversing from a source node. Then we traverse all adjacent node of that node. Then choos one of the adjacent node and traverse its adjacent. then
+second adjacent node and then its adjacent. This continues until all nodes are traverse.
+
+**********************************************************************************************************************************************************************
+
+
+public class Main
+{
+	public static void main(String[] args) {
+	    
+	// Part 1 :  Taking Input and storing it List<List<Integer>> format for adjecancy list 
+		Scanner s = new Scanner(System.in);
+		System.out.println("Enter number of nodes : ");
+		int n = s.nextInt();
+		
+		System.out.println("Enter number of edges : ");
+		int e = s.nextInt();
+		int edges[][] = new int[e+1][2];
+		
+		System.out.println("Enter edges : ");
+		for(int i=1; i<=e; i++){
+		    edges[i][0] = s.nextInt();
+		    edges[i][1] = s.nextInt();
+		}
+		
+		System.out.println("n = "+n+" e= "+e);
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>(n+1);
+		
+		for (int i = 0; i <= n; i++)
+            adj.add(new ArrayList<Integer>());
+		
+		for(int i=1; i<=e; i++){
+		    int source = edges[i][0];
+		    int destination = edges[i][1];
+		    adj.get(source).add(destination);
+		    adj.get(destination).add(source);
+		}
+		
+		
+	/*   Part 2 :  Print the graph in adjecancy list format
+		for(int i=1; i<adj.size(); i++){
+		    ArrayList<Integer> temp = new ArrayList<Integer>();
+		    System.out.print("Adjecancy list of : " + i);
+		    for(int node : adj.get(i))
+		        System.out.print(node + "\t");
+		    System.out.println();
+		}
+	*/
+		
+		
+	// Part 3 :  BREADTH FIRST SEARCH starts here
+		int visited[] = new int[n+1];
+		ArrayList<Integer> dfs = new ArrayList<Integer>();
+		
+	  //The code for dfs is as below, as per dfs algorithm  :-----------
+	    	Queue<Integer> q = new LinkedList<Integer>();
+		        q.add(1);
+		        
+		        while( !q.isEmpty() ){
+		            int node = q.poll();
+		            if(visited[node] == 0){
+		                visited[node] = 1;
+		                dfs.add(node);
+		                
+		                for(int x : adj.get(node)){
+		                    q.add(x);
+		                }
+		            }
+		        }
+	        System.out.print("DFS traversal sequence : ") ;
+	        for(int x : dfs)
+	            System.out.print(x+"\t");
+
+   }
+}
+
+
+This code is as per algorithm that we learn during college. But this algorithm does not process multi-component graph. It will traverse the only component in which
+the given source node is present. It cannot traverse the remaining componenets.
+EXAMPLE - 
+Input-
+Enter number of nodes : 7
+Enter number of edges : 4
+Enter Edges :
+1 4
+2 3
+3 5
+5 7
+
+Output -
+DFS traversal sequence : 1  4  
+
+Explanation -
+As per given info, there are 3 components:  [1,4]   [2,3,5,7]   [6] .   But the dfs returned all nodes of component in which source is present.
+
+
+********************************************************************************************************************************************************************
+
+
+import java.util.*;
+
+public class Main
+{
+	public static void main(String[] args) {
+	    
+	// Part 1 :  Taking Input and storing it List<List<Integer>> format for adjecancy list 
+		Scanner s = new Scanner(System.in);
+		System.out.println("Enter number of nodes : ");
+		int n = s.nextInt();
+		
+		System.out.println("Enter number of edges : ");
+		int e = s.nextInt();
+		int edges[][] = new int[e+1][2];
+		
+		System.out.println("Enter edges : ");
+		for(int i=1; i<=e; i++){
+		    edges[i][0] = s.nextInt();
+		    edges[i][1] = s.nextInt();
+		}
+		
+		System.out.println("n = "+n+" e= "+e);
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>(n+1);
+		
+		for (int i = 0; i <= n; i++)
+            adj.add(new ArrayList<Integer>());
+		
+		for(int i=1; i<=e; i++){
+		    int source = edges[i][0];
+		    int destination = edges[i][1];
+		    adj.get(source).add(destination);
+		    adj.get(destination).add(source);
+		}
+		
+		
+	/*   Part 2 :  Print the graph in adjecancy list format
+		for(int i=1; i<adj.size(); i++){
+		    ArrayList<Integer> temp = new ArrayList<Integer>();
+		    System.out.print("Adjecancy list of : " + i);
+		    for(int node : adj.get(i))
+		        System.out.print(node + "\t");
+		    System.out.println();
+		}
+	*/
+		
+		
+	// Part 3 :  BREADTH FIRST SEARCH starts here
+		int visited[] = new int[n+1];
+		ArrayList<Integer> dfs = new ArrayList<Integer>();
+		
+    int countConnectedComponents = 0;		        
+		for(int i=1; i<=n; i++){
+		    if(visited[i]==0){
+		        countConnectedComponents++;
+		        Queue<Integer> q = new LinkedList<Integer>();
+		        q.add(i);
+		        
+		        while( !q.isEmpty() ){
+		            int node = q.poll();
+		            if(visited[node] == 0){
+		                visited[node] = 1;
+		                dfs.add(node);
+		                
+		                for(int x : adj.get(node)){
+		                    q.add(x);
+		                }
+		            }
+		        }
+		        
+		    }
+		}
+		
+		System.out.print("DFS traversal sequence : ") ;
+	    for(int x : dfs)
+	        System.out.print(x+"\t");
+		
+	    System.out.print("No of connected componenets : "+countConnectedComponents ) ;
+	}
+}
+
+
+
+This code is complete functional code which can process multi-component graph. 
+EXAMPLE - 
+Input-
+Enter number of nodes : 7
+Enter number of edges : 4
+Enter Edges :
+1 4
+2 3
+3 5
+5 7
+
+Output -
+DFS traversal sequence : 1  4  2  3  5  7  6
+No of connected componenets : 3
+
+
+Explanation -
+As per given info, there are 3 components:  [1,4]   [2,3,5,7]   [6] .   
+
+
