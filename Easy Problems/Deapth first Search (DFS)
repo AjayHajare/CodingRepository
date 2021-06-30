@@ -1,0 +1,94 @@
+In DFS, we start traversing from a source node. Then we traverse one of the adjacent node of that node. Then we traverse its adjacent node. When there is no adjacent 
+node 'OR' all adjacent node are visited, then return to calling node. This continues until all nodes are traverse.
+
+**********************************************************************************************************************************************************************
+
+import java.util.*;
+
+public class Main
+{
+    static int visited[];
+	static ArrayList<Integer> dfs = new ArrayList<Integer>();
+	static ArrayList<ArrayList<Integer>> adj;
+	
+	public static void main(String[] args) {
+	    
+	// Part 1 :  Taking Input and storing it List<List<Integer>> format for adjecancy list 
+		Scanner s = new Scanner(System.in);
+		System.out.println("Enter number of nodes : ");
+		int n = s.nextInt();
+		
+		System.out.println("Enter number of edges : ");
+		int e = s.nextInt();
+		int edges[][] = new int[e+1][2];
+		
+		System.out.println("Enter edges : ");
+		for(int i=1; i<=e; i++){
+		    edges[i][0] = s.nextInt();
+		    edges[i][1] = s.nextInt();
+		}
+		
+		System.out.println("n = "+n+" e= "+e);
+		adj = new ArrayList<ArrayList<Integer>>(n+1);
+		
+		for (int i = 0; i <= n; i++)
+            adj.add(new ArrayList<Integer>());
+		
+		for(int i=1; i<=e; i++){
+		    int source = edges[i][0];
+		    int destination = edges[i][1];
+		    adj.get(source).add(destination);
+		    adj.get(destination).add(source);
+		}
+		
+		
+	/*   Part 2 :  Print the graph in adjecancy list format
+		for(int i=1; i<adj.size(); i++){
+		    ArrayList<Integer> temp = new ArrayList<Integer>();
+		    System.out.print("Adjecancy list of : " + i);
+		    for(int node : adj.get(i))
+		        System.out.print(node + "\t");
+		    System.out.println();
+		}
+	*/
+		
+		
+	// Part 3 :  DEAPTH FIRST SEARCH starts here
+		
+		visited = new int[n+1];
+	     
+		for(int i=1; i<=n; i++){
+		    if(visited[i]==0)
+		        dfs(i);		
+		}
+	
+		
+		System.out.print("DFS traversal sequence : ") ;
+	    for(int x : dfs)
+	        System.out.print(x+"\t");
+		
+	    //System.out.print("No of connected componenets : "+countConnectedComponents ) ;
+	
+		
+	}
+	
+	public static void dfs(int node){
+	   
+		  if(visited[node] == 0){
+              visited[node] = 1;
+              dfs.add(node);
+		      for(int x : adj.get(node)){
+		          dfs(x);
+		      }
+		  }
+	}
+
+}
+
+
+**********************************************************************************************************************************************************************
+
+Time complexity : O(V+E) .....It visits each node once and traverse each edge once in directed graph.
+		              O(V+2E) ....It visits each node once and traverse each edge twice in undirected graph.
+Space complexity : O(N+E) + O(N) .....O(N+E) is for adjecancy list, O(N) for visited array, O(N) 
+
