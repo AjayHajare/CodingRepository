@@ -198,4 +198,8 @@ No of connected componenets : 3
 Explanation -
 As per given info, there are 3 components:  [1,4]   [2,3,5,7]   [6] .   
 
+*****************************************************************************************************************************************************************
 
+Time complexity : O(V+E) .....It visits each node once and traverse each edge once in directed graph.
+		  O(V+2E) ....It visits each node once and traverse each edge twice in undirected graph.
+Space complexity : O(N+E) + O(N) .....O(N+E) is for adjecancy list, O(N) for visited array, O(N) 
