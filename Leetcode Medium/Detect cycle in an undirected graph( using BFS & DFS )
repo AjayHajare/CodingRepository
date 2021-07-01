@@ -52,20 +52,18 @@ class Solution
     
     public boolean detectCycleBFS(int vertex, ArrayList<ArrayList<Integer>> adj, int visited[]){
         Queue<Node> q = new LinkedList<Node>();
-        Node node = new Node(vertex, -1);
-        q.add(node);                                                           //Whenever we add any node in queue, immediately mark the visited for that node as true
-        visited[vertex] = 1;
+        Node node = new Node(vertex, -1);                                      //Assign value '-1' to parent node of surce vertex, as there is no parent for it
+        q.add(node);                                                           //Add the node in queue
         
         while(!q.isEmpty()){
             int current = q.peek().current;
             int parent = q.peek().parent;
-            q.remove();                                                        //Once we get values of current and parent node, remove that node from queue. 
-                                                                               //This step is necessary otherwise it will fall in infinite loop.
-            
+            q.poll();                                                          //Once we get values of current and parent node, remove that node from queue. 
+                                                                               //This step is necessary otherwise it will fall in infinite loop. 
+            visited[current] = 1;
             for(int x : adj.get(current)){
                 if(visited[x] == 0){
                     q.add(new Node(x, current));                              //Whenever we add any node in queue, immediately mark the visited for that node as true
-                    visited[x]=1;
                 }
                 else if(parent != x)
                     return true;
