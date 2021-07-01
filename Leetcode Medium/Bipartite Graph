@@ -78,3 +78,48 @@ class Solution
         return true;                                                            //During while loop, if none of node has same color as adjecant node, then graph is bipartite
     }
 }
+
+
+Time Complexity  :  O(V+E) .........beacuase we visit every node once and during this visit will traverse through each edge.
+Space Complexity :  O(V+E) + O(V) + O(V)   ........O(V+E) for adjecancy list,  O(V) for visited array,   O(V) is auxiliary space for recursion.
+
+********************************************************************************************************************************************************************* 
+
+
+//This solution is based on DFS  :------------------
+
+
+class Solution
+{
+    public boolean isBipartite(int V, ArrayList<ArrayList<Integer>>adj)
+    {
+        int visited[] = new int[V];
+        Arrays.fill(visited, -1);                                            //visited array is uesd to denote color of node.
+        
+        for(int i=0; i<V; i++){                                              //This for loop ensures that method is called of each component of graph
+            if(visited[i] == -1){
+                visited[i] = 0;                                             //Source node of every component is assign value '0' and then DFS is called on it
+                if(checkBipartiteDFS(i, adj, visited) == false){
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    public static boolean checkBipartiteDFS(int v, ArrayList<ArrayList<Integer>>adj,  int visited[]){
+            for(int x:adj.get(v)){
+                if(visited[x] == -1){
+                    visited[x] = 1-visited[v];                                         
+                    if( checkBipartiteDFS(x, adj, visited) == false )              //This line is making recursive calls. If anyone of the recursive call detects the cycle and return false.
+                        return false;                                              //then this function call can directly return false.
+                }
+                else if(visited[x] == visited[v]){                                //This else will be executed when none of recursive call beneath, returned true. Then it will check if current node has same color as adjecant node
+                    return false;                                                 //if it has same color then it will return false.
+                }
+            }
+        
+        return true;                                                             //If both of above cases doesn't detect color mistake, then it means graph is bipartite.
+    }
+}
