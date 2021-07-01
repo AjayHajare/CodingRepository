@@ -1,0 +1,87 @@
+Given an undirected graph with V vertices and E edges, check whether it contains any cycle or not. 
+
+Example 1:
+Input:   
+5 5
+0 4
+1 2
+1 4
+2 3
+3 4
+Output: 1
+Explanation: 1->2->3->4->1 is a cycle.
+
+Example 2:
+Input: 
+4 4
+1 2
+2 3
+Output: 0
+Explanation: No cycle in the graph.
+
+ 
+Your Task:
+You don't need to read or print anything. Your task is to complete the function isCycle() which takes V denoting the number of vertices and adjacency list as input 
+parameters and returns a boolean value denoting if the undirected graph contains any cycle or not.
+ 
+
+Expected Time Complexity: O(V + E)
+Expected Space Complexity: O(V)
+ 
+
+Constraints:
+1 ≤ V, E ≤ 10^5
+
+***********************************************************************************************************************************************************************
+
+//This soluion is based on BFS. 
+
+class Solution
+{
+    //Function to detect cycle in an undirected graph.
+    public boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj)
+    {
+        Solution sol = new Solution();
+        int visited[] = new int[V];
+        for(int i=0; i<V; i++)                                                //This loop will ensure that the program processes for each component of graph.
+            if( sol.detectCycleBFS(i, adj, visited) )                         //If any of component has a cycle then whole graph will be declared as graph with cycle
+                return true;
+        return false;
+    }
+    
+    public boolean detectCycleBFS(int vertex, ArrayList<ArrayList<Integer>> adj, int visited[]){
+        Queue<Node> q = new LinkedList<Node>();
+        Node node = new Node(vertex, -1);
+        q.add(node);
+        
+        while(!q.isEmpty()){
+            Node n = q.poll();
+            if(visited[n.current] == 0){
+                visited[n.current] = 1;
+                for(int x : adj.get(n.current)){
+                    if(visited[x] == 0)
+                        q.add(new Node(x, n.current));
+                    else if(n.parent != x)
+                        return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    class Node{                                                             //This class defined to store a node and its previous node in an object. And the queue
+        int current, parent;                                                //is collenction of these objects. This is an example to store two values in single element
+        public Node(int current, int parent){                               //inside a queue.
+            this.current = current;
+            this.parent = parent;
+        }
+    }
+}
+
+Time Complexity :  O(V+E)
+Space Complexity : O(V) 
+
+**********************************************************************************************************************************************************************
+
+
