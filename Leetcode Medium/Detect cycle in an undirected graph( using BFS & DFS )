@@ -13,7 +13,7 @@ Explanation: 1->2->3->4->1 is a cycle.
 
 Example 2:
 Input: 
-4 4
+4 2
 1 2
 2 3
 Output: 0
@@ -44,6 +44,7 @@ class Solution
         Solution sol = new Solution();
         int visited[] = new int[V];
         for(int i=0; i<V; i++)                                                //This loop will ensure that the program processes for each component of graph.
+          if(visited[i]==0)
             if( sol.detectCycleBFS(i, adj, visited) )                         //If any of component has a cycle then whole graph will be declared as graph with cycle
                 return true;
         return false;
@@ -52,18 +53,22 @@ class Solution
     public boolean detectCycleBFS(int vertex, ArrayList<ArrayList<Integer>> adj, int visited[]){
         Queue<Node> q = new LinkedList<Node>();
         Node node = new Node(vertex, -1);
-        q.add(node);
+        q.add(node);                                                           //Whenever we add any node in queue, immediately mark the visited for that node as true
+        visited[vertex] = 1;
         
         while(!q.isEmpty()){
-            Node n = q.poll();
-            if(visited[n.current] == 0){
-                visited[n.current] = 1;
-                for(int x : adj.get(n.current)){
-                    if(visited[x] == 0)
-                        q.add(new Node(x, n.current));
-                    else if(n.parent != x)
-                        return true;
+            int current = q.peek().current;
+            int parent = q.peek().parent;
+            q.remove();                                                        //Once we get values of current and parent node, remove that node from queue. 
+                                                                               //This step is necessary otherwise it will fall in infinite loop.
+            
+            for(int x : adj.get(current)){
+                if(visited[x] == 0){
+                    q.add(new Node(x, current));                              //Whenever we add any node in queue, immediately mark the visited for that node as true
+                    visited[x]=1;
                 }
+                else if(parent != x)
+                    return true;
             }
         }
         
@@ -84,4 +89,39 @@ Space Complexity : O(V)
 
 **********************************************************************************************************************************************************************
 
+//This solution uses DFS algorithm.
+
+class Solution
+{
+    //Function to detect cycle in an undirected graph.
+    public boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj)
+    {
+        Solution sol = new Solution();
+        int visited[] = new int[V];
+        for(int i=0; i<V; i++){
+            if(visited[i]==0)                                          
+                if( sol.detectCycleDFS(i, adj, visited, -1) )
+                    return true;
+        }
+        return false;
+    }
+    
+    public boolean detectCycleDFS(int vertex, ArrayList<ArrayList<Integer>> adj, int visited[], int previous){
+        visited[vertex] = 1;                                                       //When dfs is called on a vertex, then the first priority is mark it as visisted
+        for(int x : adj.get(vertex)){
+            if(visited[x]==0){
+                if(detectCycleDFS(x, adj, visited, vertex)==true)                 //This line is making recursive calls. If anyone of the recursive call detects the cycle and return true.
+                    return true;                                                  //then this function call can directly return true.
+            }
+            else if(x!=previous)                                                  //This else will be executed when none of recursive call beneath, returned true. Then it will check if current node got a cycle.
+                return true;                                                      //if it got cycle then it will return true.
+        }
+        
+        return false;                                                            //If both of above cases doesn't detect cycle, then it means there is no cycle.
+    }
+      
+}
+
+Time Complexity :  O(V+E)
+Space Complexity : O(V) 
 
