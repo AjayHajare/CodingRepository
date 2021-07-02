@@ -1,0 +1,78 @@
+Topological sort is linear ordering of vertices of a directed graph such that if there is a edge from 'u' to  'v' (u->v), then u appears before v in the ordering.
+Topological sort is applied to DAG (Directed Acyclic Graph).DAG are directed graphs with no cycle.
+
+*********************************************************************************************************************************************************************
+
+Given a Directed Graph with V vertices and E edges, Find any Topological Sorting of that Graph.
+
+
+Example 1:
+
+Input:
+3 4
+3 0
+1 0
+2 0
+Output:
+1
+Explanation:
+The output 1 denotes that the order is
+valid. So, if you have, implemented
+your function correctly, then output
+would be 1 for all test cases.
+One possible Topological order for the
+graph is 3, 2, 1, 0.
+
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function topoSort()  which takes the integer V denoting the number of vertices 
+and adjacency list as input parameters and returns an array consisting of a the vertices in Topological order. As there are multiple Topological orders possible, 
+you may return any of them.
+
+
+Expected Time Complexity: O(V + E).
+Expected Auxiliary Space: O(V).
+
+
+Constraints:
+2 ≤ V ≤ 10^4
+1 ≤ E ≤ (N*(N-1))/2
+
+*********************************************************************************************************************************************************************
+
+
+/* 
+   The intution is DFS will go as deep as it can. While returning we will add each element in the stack. At the end while printing result we
+   we will pop topmost element from stack. This poping order is topological sort.
+*/
+
+class Solution{
+    static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj){
+        int visited[] = new int[V];
+        Stack<Integer> stk = new Stack<Integer>();
+        
+        for(int i=0; i<V; i++){                                     //This loop ensure that every component of graph is processed.
+            if(visited[i]==0)
+                topologicalSortDFS(i, visited, stk, adj);
+        }
+        
+        int res[] = new int[V];                                     //This block of program is used to copy the content of stack in the array.
+        int j = 0;
+        while(!stk.isEmpty())
+            res[j++]=stk.pop();
+            
+        return res;
+    }
+    
+    public static void topologicalSortDFS(int node, int visited[], Stack stk, ArrayList<ArrayList<Integer>> adj){
+        visited[node]= 1;                                           //This will mark node as visited before proceeding it
+        for(int x: adj.get(node)){
+            if(visited[x]==0)
+                topologicalSortDFS(x, visited, stk, adj);           //For all adjacent nodes which are not visited, are given to DFS function
+        }
+        stk.push(node);                                             //At the end before returning, the element need to add to Stack.
+    }
+}
+
+
+Time Complexity : O(V+E) 
+Space complexity : O(V) + O(V) + O(V) +O(V) ........O(V) for stack, O(V) for visited array, O(V) for res array, O(V) for recursive function calls
