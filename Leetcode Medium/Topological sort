@@ -76,3 +76,56 @@ class Solution{
 
 Time Complexity : O(V+E) 
 Space complexity : O(V) + O(V) + O(V) +O(V) ........O(V) for stack, O(V) for visited array, O(V) for res array, O(V) for recursive function calls
+
+*********************************************************************************************************************************************************************
+
+//It can also be solved using BFS algo. This approach is known as Kahn's algorithm.
+
+
+class Solution
+{   
+    static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) 
+    {
+        int tsort[] = new int[V];                                    //This is array to store the order.
+        int indegree[] = new int[V];                                 //This is the visited array. Here in this algo, we need to keep count of indegree of each node
+        
+        for(int i=0; i<V; i++){                                      //Loop to calculate indegree of each node
+            for(int x:adj.get(i)){
+                indegree[x]++;
+            }
+        }
+        
+        tsort = bfs(0, tsort, indegree, adj);                       //The direccted graph do not have components, hence we don not have to use for loop
+                
+        return tsort;
+    }
+    
+    static int[]  bfs(int node, int tsort[], int indegree[], ArrayList<ArrayList<Integer>> adj){
+        Queue<Integer> q = new LinkedList<Integer>();
+        
+        for(int i=0; i<indegree.length; i++){                       //Add all nodes in the queue which have indegree '0'
+            if(indegree[i]==0)
+                q.add(i);
+        }
+        
+        int pos = 0;
+        while(!q.isEmpty()){
+            int temp = q.poll();                               
+            tsort[pos++] = temp;                                    //add the removed element from the queue to the topological sort array
+            
+            for(int x:adj.get(temp)){                                   
+                indegree[x]--;                                     //for all adjacent nodes of the current node decrease the indegree. We decrease indegree here because when traverse from a node
+                                                                   //to its adjacent node, the perticular edge is processed and we need to discard it. 'Decreasing the indegree serves this purpose.
+                if(indegree[x] == 0){
+                    q.add(x);                                      //Add node in the queue which have indegree '0'. The indegree '0' means all its parent nodes are processed, so we can add it to topological order.
+                }
+            }
+            
+        }
+        
+        return tsort;
+    }
+}
+
+Time Complexity : O(V+E) 
+Space complexity : O(V)
