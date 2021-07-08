@@ -78,3 +78,57 @@ class Solution
 
 Time complexity :  O(V+E) 
 Space complexity :  O(V)+ O(V) + O(V+E) + O(V) ........O(V) for vis[],  O(V) for dfsvis[], O(V+E) for adjecancy list, O(V) for recursive calls
+
+************************************************************************************************************************************************************************
+
+//This solution is based on Kahn's algorithm which is used for topological sort using BFS. Same logic is used here. 
+//As we know the topological sort is applied to only DAG. If the topo sort will contain all nodes of graph, then it means that there is no cycle in graph.
+//Otherwise there is a cycle in the graph.
+
+
+
+class Solution 
+{
+    //Function to detect cycle in a directed graph.
+    public boolean isCyclic(int V, ArrayList<ArrayList<Integer>> adj)
+    {
+        int indegree[] = new int[V];
+        
+        for(int i=0; i<V; i++){
+            for(int x: adj.get(i)){
+                indegree[x]++;
+            }
+        }
+        return new Solution().detectCycleBFS(0, indegree, adj);
+    }
+    
+    public boolean detectCycleBFS(int vertex, int indegree[], ArrayList<ArrayList<Integer>> adj){
+        Queue<Integer> q = new LinkedList<Integer>();
+        
+        for(int i=0; i<indegree.length; i++){                       //Add all nodes in the queue which have indegree '0'
+            if(indegree[i]==0)
+                q.add(i);
+        }
+        
+        int count = 0;
+        while( !q.isEmpty() ){
+            int node = q.poll();
+            count++;                                             //Here instead of creating array to store the topo sort, we just used count to calculate number of element in topo sort
+            for(int x: adj.get(node)){
+                indegree[x]--;                                   //When we traverse from a node to its adjacent node, then indegree of adjacent node need to be decreased. Beacuase the incoming edge can be discarded now as we have traversed it     
+                
+                if(indegree[x]==0)                               //indegree is '0' means all its pre-dependencies are covered and we can include that in our topo sort.
+                    q.add(x);
+            }
+        }
+        
+        if( count == indegree.length)
+            return false;
+        
+        return true;
+    }
+}
+
+
+Time complexity :  O(V+E) 
+Space complexity :  O(V)+ O(V) + O(V+E) ........O(V) for indegree[],  O(V) for queue, O(V+E) for adjecancy list
