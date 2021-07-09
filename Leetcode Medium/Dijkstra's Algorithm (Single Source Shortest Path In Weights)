@@ -1,0 +1,123 @@
+1. You are given a graph and a source vertex. The vertices represent cities and the edges represent 
+    distance in kms.
+2. You are required to find the shortest path to each city (in terms of kms) from the source city along 
+    with the total distance on path from source to destinations.
+
+Note -> For output, check the sample output and question video.
+
+Constraints
+
+None
+
+Sample Input
+
+7
+9
+0 1 10
+1 2 10
+2 3 10
+0 3 40
+3 4 2
+4 5 3
+5 6 3
+4 6 8
+2 5 5
+0
+
+Sample Output
+
+0 via 0 @ 0
+1 via 01 @ 10
+2 via 012 @ 20
+5 via 0125 @ 25
+4 via 01254 @ 28
+6 via 01256 @ 28
+3 via 012543 @ 30
+
+*****************************************************************************************************************************************************************
+
+// Dijkstra's algorithm is completely based on BFS algorithm. Just the difference is instead of queue, we used priority queue.
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+   static class Edge {
+      int src;
+      int nbr;
+      int wt;
+
+      Edge(int src, int nbr, int wt) {
+         this.src = src;
+         this.nbr = nbr;
+         this.wt = wt;
+      }
+   }
+
+   public static void main(String[] args) throws Exception {
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+      int vtces = Integer.parseInt(br.readLine());
+      ArrayList<Edge>[] graph = new ArrayList[vtces];                 //Graph is an array of ArrayList, where each element is array represents is a list. And each element
+      for (int i = 0; i < vtces; i++) {                               //of list is an edge which is represented as 'v1 v2 wt'
+         graph[i] = new ArrayList<>();
+      }
+
+      int edges = Integer.parseInt(br.readLine());                          
+      for (int i = 0; i < edges; i++) {                                //This block reads the edges in form 'v1 v2 wt' i.e. edge is from v1 to v2 with weight wt
+         String[] parts = br.readLine().split(" ");
+         int v1 = Integer.parseInt(parts[0]);
+         int v2 = Integer.parseInt(parts[1]);
+         int wt = Integer.parseInt(parts[2]);
+         graph[v1].add(new Edge(v1, v2, wt));                         //It is undirected graph. Hence when there is edge from v1 to v2, it means there is a edge from v2 to v1
+         graph[v2].add(new Edge(v2, v1, wt));
+      }
+
+      int src = Integer.parseInt(br.readLine());
+      // write your code here
+      
+      PriorityQueue<Pair> pq = new PriorityQueue<Pair>();                             /* BFS algorithm starts from here  */
+      int visited[] = new int[vtces];
+      
+      pq.add(new Pair(src, src+"", 0));                                               //Add src in priority queue. This priority queue will maintain the elements in ascending order of weight.
+      
+      while(!pq.isEmpty()){
+          Pair rem = pq.remove();                                                     //remove the peek element from priority queue
+          if(visited[rem.v] == 0){                                                    //if it is unvisited, then visit it
+              visited[rem.v] = 1;
+              
+              System.out.println(rem.v +" via "+ rem.psf + " @ "+ rem.wsf);           //when we visit that vertex, add the vertex in path and add edge weight also.
+              
+              for(Edge e : graph[rem.v]){
+                  if(visited[e.nbr]==0)                                             //Then check for all adjacent node and add unvisited nodes to the priority queue
+                     pq.add(new Pair(e.nbr, rem.psf+e.nbr , rem.wsf+e.wt));               
+              }
+              
+          }
+      }
+      
+      
+      
+   }
+   
+   public static class Pair implements Comparable<Pair>{
+       int v;
+       String psf;
+       int wsf;
+        
+       Pair(int v, String psf, int wsf){
+            this.v = v;                                       //vertex      
+            this.psf = psf;                                   //psf is 'path so far'
+            this.wsf = wsf;                                   //wsf is 'weight so far'
+       } 
+       
+       public int compareTo(Pair o){                          //This is method of 'Comparable' interface, which make the priority queue element to arrange in ascending order of weight.
+           return this.wsf - o.wsf;
+       }
+       
+   }
+}
+
+
+Time complexity : O(V+E)
+Space complexity : O(V) +O(V) ......O(V) for priority queue and O(V) for visited array
