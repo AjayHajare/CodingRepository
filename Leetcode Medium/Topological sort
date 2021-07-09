@@ -42,7 +42,7 @@ Constraints:
 
 /* 
    The intution is DFS will go as deep as it can. While returning we will add each element in the stack. At the end while printing result we
-   we will pop topmost element from stack. This poping order is topological sort.
+   we will pop topmost element from stack one after the another. This poping order is topological sort.
 */
 
 class Solution{
