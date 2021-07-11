@@ -119,6 +119,7 @@ public class Main {
 }
 
 
-Time complexity : O(V+E)logV .......(V+E) for traveling all vertices and edges of graph.Along with that every time priority queue is taking 'logV' to maintain ascending order. Hence multipled by 'logV'.
+
+Time complexity : O(v + ElogV) .......(V+E) for traveling all vertices and edges of graph. And for every edge, the priority queue is taking 'logV' to maintain ascending order. Hence multipled 'E' by 'logV'.
                                      Priority queue takes 'logV', becuase it is implemented using Heap. And inserting in priority queue is same as build heap. Hence it takes 'logV' complexity.
-Space complexity : O(V) +O(V) ......O(V) for priority queue and O(V) for visited array
+Space complexity : O(V) +O(V) ........O(V) for priority queue and O(V) for visited array
