@@ -119,5 +119,5 @@ public class Main {
 }
 
 
-Time complexity : O(V+E)
+Time complexity : O(V+E)logV .......(V+E) for traveling all vertices and edges of graph.Along with that every time priority queue is taking 'logV' to maintain ascending order. Hence multipled by 'logV'
 Space complexity : O(V) +O(V) ......O(V) for priority queue and O(V) for visited array
