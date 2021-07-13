@@ -1,0 +1,146 @@
+
+Given a weighted, undirected and connected graph of V vertices and E edges. The task is to find the sum of weights of the edges of the Minimum Spanning Tree.
+
+Example 1:
+
+Input:
+3 3
+0 1 5
+1 2 3
+0 2 1
+Output:
+4
+Explanation:
+0 to 2, wt = 1
+1 to 2, wt = 3
+total cost = 4
+The Spanning Tree resulting in a weight of 4 is shown above.
+
+Example 2:
+
+Input:
+2 1
+0 1 5
+Output:
+5
+Explanation:
+0 to 1, wt = 5
+total cost = 5
+Only one Spanning Tree is possible which has a weight of 5.
+
+ 
+
+Your task:
+Since this is a functional problem you don't have to worry about input, you just have to complete the function  spanningTree() which takes number of vertices V 
+and an adjacency matrix adj as input parameters and returns an integer denoting the sum of weights of the edges of the Minimum Spanning Tree. Here adj[i] 
+contains a list of lists containing two integers where the first integer j denotes that there is an edge between i and j and second integer w denotes that the 
+distance between edge i and j is w.
+ 
+
+Expected Time Complexity: O(ElogV).
+Expected Auxiliary Space: O(V2).
+ 
+
+Constraints:
+2 ≤ V ≤ 1000
+V-1 ≤ E ≤ (V*(V-1))/2
+1 ≤ w ≤ 1000
+Graph is connected and doesn't contain self loops & multiple edges.
+
+******************************************************************************************************************************************************************
+
+
+class Solution
+{   
+    static int parent[];                    //These two arrays required for Disjoint set algo which is used in Kruskal's algo
+    static int height[];
+    
+    static int spanningTree(int V, ArrayList<ArrayList<ArrayList<Integer>>> adj) 
+    {   
+        parent = new int [V];               //Initialize to two array with number of vertices.
+        height = new int [V];
+        for(int i=0; i<V; i++){             //Initially parent of each vertex is itself.
+            parent[i] = i;
+        }
+        
+        
+        int ans = 0;
+        
+        PriorityQueue<Pair> pq = new PriorityQueue<Pair>();             //Priority queue is used to maintain ascending order of edges in terms of weights
+        int cost = 0;
+        
+        for(int i=0; i<V; i++){
+            for(ArrayList<Integer> l : adj.get(i)){
+                pq.add(new Pair(i, l.get(0), l.get(1)));
+            }
+        }
+        
+        while(!pq.isEmpty()){
+            Pair p = pq.remove();
+            if( findParent(p.getU()) != findParent(p.getV()) ){         //If both vertices have different parent it means they belong to different components i.e. the perticular edge will not form cycle in graph
+                ans += p.getWt();                                       //Then add this edge to MST
+                union( p.getU(), p.getV() );                            //and add the edge in the component before going to next edge
+            }
+        }
+        
+        return ans;
+    }
+    
+    static int findParent(int u){                                       //These two blocks are from  "Disjoint Set Algo"
+        if(parent[u] == u){
+            return u;
+        }
+        return parent[u] = findParent(parent[u]);
+    }
+    
+    static void union(int u, int v){
+        int parentU = findParent(u);
+        int parentV = findParent(v);
+        if(height[parentU]<height[parentV]){                        
+            parent[parentU] =  parent[parentV];                         //If height of 'u' is less, then attach u to v 
+        }
+        else if(height[parentU]>height[parentV]){
+            parent[parentV] =  parent[parentU];                         //If height of 'v' is less, then attach v to u 
+        }
+        else{
+            parent[parentU] =  parent[parentV];                         //If height of 'u' is same as height 'v', then anyone to other and then increse the height by 1 
+            height[parentV]++;
+        }
+    }
+    
+    static class Pair implements Comparable<Pair>{
+        int u;
+        int v;
+        int wt;
+        
+        Pair(int _u, int _v, int _wt){
+            this.u = _u;
+            this.v = _v;
+            this.wt = _wt;
+        }
+        
+        int getU(){
+            return this.u;
+        }
+        
+        int getV(){
+            return this.v;
+        }
+        
+        int getWt(){
+            return this.wt;
+        }
+        
+        public int compareTo(Pair o){               //'compareTo()' method is implemented as a contract from 'Comparable<>' interface
+            return this.wt - o.wt;                  //This method make the elements of priority queue to sort according to increasing order of edge weights  
+        }
+    }
+}
+
+
+Time complexity :  O(logE) + O(ElogE) ........ O(logE) for maintainin the priority queue. 
+                                               O(ElogE) for each edge, the findparent() is called which makes recursive calls and have complexity O(log E)
+                                               
+Space complexity : O(E) + O(V) + O(V) ........ O(E) for storing priority queue
+                                               O(V) for parent array
+                                               O(V) for height array
