@@ -49,6 +49,7 @@ Graph is connected and doesn't contain self loops & multiple edges.
 
 ******************************************************************************************************************************************************************
 
+//This algorithm is based on disjoint sets algorithm.
 
 class Solution
 {   
