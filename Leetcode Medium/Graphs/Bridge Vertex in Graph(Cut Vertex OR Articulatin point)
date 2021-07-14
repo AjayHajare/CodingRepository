@@ -2,6 +2,10 @@ For given undirected graph find the cut vertex. Cut vertex is a vertex, removal 
 
 ******************************************************************************************************************************************************************
 
+//The approach is based on Tarjan's Algorithm. Using Tarjan's algorithm, we first find the 'cut edges'. The vertices of these cut edges with indegree greater 
+//than '1' are the cut vertices.
+
+
 import java.util.*;
 
 public class CutVertex{
@@ -47,7 +51,8 @@ public class CutVertex{
 
         System.out.println("Cut vertex : " + cv.res);
     }
-
+    
+    //This is the function of Tarjan's algorithm.
     void cutVertexDFS(int node, int parent, int low[], int tin[], int visited[], int indegree[], int timer, ArrayList<ArrayList<Integer>> adj ){
         visited[node] = 1;
         low[node] = tin[node] = timer;
