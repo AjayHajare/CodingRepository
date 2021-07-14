@@ -1,0 +1,122 @@
+Given an undirected graph of V vertices and E edges and another edge (c-d), the task is to find if the given edge is a bridge in graph, i.e., removing the edge 
+disconnects the graph.
+ 
+
+Example 1:
+
+Input: 
+4 3
+0 1 
+1 2
+2 3
+c = 1, d = 2
+Output:
+1
+Explanation:
+From the graph, we can clearly see that
+removing the edge 1-2 will result in 
+disconnection of the graph. So, it is 
+a bridge Edge and thus the Output 1.
+
+Example 2:
+
+Input:
+5 5
+0 1
+0 2
+0 3
+1 2
+3 4
+c = 0, d = 2
+Output:
+0
+Explanation:
+
+Removing the edge between nodes 0 and 2
+won't affect the connectivity of the graph.
+So, it's not a Bridge Edge. All the Bridge
+Edges in the graph are marked with a blue
+line in the above image.
+
+ 
+
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function isBridge()  which takes number of vertices V, the number of edges E, an 
+adjacency lsit adj and two integers c and d denoting the edge as input parameters and returns 1 if the given edge c-d is a Bridge. Else, it returns 0.
+
+Expected Time Complexity: O(V + E).
+Expected Auxiliary Space: O(V).
+
+Constraints:
+1 ≤ V,E ≤ 105
+0 ≤ c, d ≤ V-1
+
+
+******************************************************************************************************************************************************************
+
+// This approach is based on DFS algorithm. Explaination for intuition check 'CodeNcode' youtube chanel.
+
+
+class Solution
+{
+    ArrayList<int[]> bridge = new ArrayList<int[]>();                //ArrayList of integer array to store the edges which are the bridges
+    
+    int isBridge(int n, ArrayList<ArrayList<Integer>> adj,int c,int d){
+        int vis[] = new int[n]; 
+        int tin[] = new int[n];                     //'in' array indicate time at which we enter the node. So, the node with lower 'in' time is parent and node with higher 'in' time is child
+        int low[] = new int[n];                     //'low' array indicate what is the lowest ancestor which can we directly reached from current node
+    
+        int timer = 0; 
+        
+        for(int i = 0;i<n;i++) {                            //This for loop insures function call to dfs is made for each companents
+        	if(vis[i] == 0) {
+        		dfs(i, -1, vis, tin, low, adj, timer);
+        	}
+        }
+        
+        /*
+        System.out.println("bridges are : ");                           //This loop is to print all bridges in the graph
+        for(int x[] : bridge){
+            System.out.println(x[0] +" - "+ x[1] + " is a bridge");
+        }
+        */
+        
+        for(int x[] : bridge){
+            if( (x[0]==c && x[1]==d) || (x[0]==d && x[1]==c) )
+                 return 1;
+        }
+        
+        return 0;
+    }
+    
+    private void dfs(int node, int parent, int vis[], int tin[], int low[], ArrayList<ArrayList<Integer>> adj, int timer) {
+		vis[node] = 1; 
+		tin[node] = low[node] = timer++; 
+
+		for(Integer it: adj.get(node)) {
+			if(it == parent) continue; 
+
+			if(vis[it] == 0) {
+				dfs(it, node, vis, tin, low, adj, timer); 
+				low[node] = Math.min(low[node], low[it]); 
+
+				if(low[it] > tin[node]) {
+					int temp[] = new int[2];
+					temp[0] = node;
+					temp[1] = it;
+					
+					bridge.add(temp);
+					
+				}
+			} 
+			else {
+				low[node] = Math.min(low[node], tin[it]); 
+			}
+		}
+	}
+    
+}
+
+
+PTime complexity : O(V+E) ......for implementing DFS 
+Space complexity : 2*O(V)+ O(E) ...... O(V) for low array, O(V) for in array, O(E) for bridges
