@@ -1,0 +1,79 @@
+For given undirected graph find the cut vertex. Cut vertex is a vertex, removal of which makes the graph disconnected i.e. Number of components increases.
+
+******************************************************************************************************************************************************************
+
+import java.util.*;
+
+public class CutVertex{
+    HashSet<Integer> res = new HashSet<Integer>();
+
+    public static void main(String args[]){
+        Scanner scan = new Scanner(System.in);
+        int V = scan.nextInt();
+        int E = scan.nextInt();
+
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+
+        for(int i=0; i<V; i++){
+            adj.add(new ArrayList<Integer>());
+        }
+
+        for(int i=0; i<E; i++){
+            int u = scan.nextInt();
+            int v = scan.nextInt();
+
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        System.out.println("Printing the graph : ");
+        for(ArrayList<Integer> l : adj){
+            System.out.println(l);
+        }
+
+        int low[] = new int[V];
+        int tin[] = new int[V];
+        int visited[] = new int[V];
+        int timer = 0;
+
+        int indegree[] = new int[V];
+        int index = 0;
+        for(ArrayList<Integer> l : adj){
+            indegree[index++] = l.size();
+        }
+
+        CutVertex cv = new CutVertex();
+        cv.cutVertexDFS(0, -1, low, tin, visited, indegree, timer, adj);
+
+        System.out.println("Cut vertex : " + cv.res);
+    }
+
+    void cutVertexDFS(int node, int parent, int low[], int tin[], int visited[], int indegree[], int timer, ArrayList<ArrayList<Integer>> adj ){
+        visited[node] = 1;
+        low[node] = tin[node] = timer;
+        timer++;
+
+        for(int nbr : adj.get(node)){
+            if(nbr==parent)
+                continue;
+            
+            if(visited[nbr]==0){
+                cutVertexDFS(nbr, node, low, tin, visited, indegree, timer, adj);
+                low[node] = Math.min( low[node], low[nbr]);
+                if(low[nbr] > tin[node]){
+                    if(indegree[node]>1) 
+                        res.add(node);
+                    if(indegree[nbr]>1)
+                        res.add(nbr);
+                }
+            }
+            else{
+                low[node] = Math.min( low[node], tin[nbr]);
+            }
+        }
+    }
+}
+
+
+Time complexity : O(V+E)
+Space complexity : O(E)
