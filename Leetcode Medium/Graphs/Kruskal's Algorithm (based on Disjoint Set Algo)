@@ -98,13 +98,13 @@ class Solution
         int parentU = findParent(u);
         int parentV = findParent(v);
         if(height[parentU]<height[parentV]){                        
-            parent[parentU] =  parent[parentV];                         //If height of 'u' is less, then attach u to v 
+            parent[parentU] =  parentV;                         //If height of 'u' is less, then attach u to v 
         }
         else if(height[parentU]>height[parentV]){
-            parent[parentV] =  parent[parentU];                         //If height of 'v' is less, then attach v to u 
+            parent[parentV] =  parentU;                         //If height of 'v' is less, then attach v to u 
         }
         else{
-            parent[parentU] =  parent[parentV];                         //If height of 'u' is same as height 'v', then anyone to other and then increse the height by 1 
+            parent[parentU] =  parentV;                         //If height of 'u' is same as height 'v', then anyone to other and then increse the height by 1 
             height[parentV]++;
         }
     }
