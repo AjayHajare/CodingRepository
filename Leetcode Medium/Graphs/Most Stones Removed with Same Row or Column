@@ -1,0 +1,96 @@
+On a 2D plane, we place n stones at some integer coordinate points. Each coordinate point may have at most one stone.
+A stone can be removed if it shares either the same row or the same column as another stone that has not been removed.
+Given an array stones of length n where stones[i] = [xi, yi] represents the location of the ith stone, return the largest possible number of stones that can be 
+removed.
+
+ 
+
+Example 1:
+
+Input: stones = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]
+Output: 5
+Explanation: One way to remove 5 stones is as follows:
+1. Remove stone [2,2] because it shares the same row as [2,1].
+2. Remove stone [2,1] because it shares the same column as [0,1].
+3. Remove stone [1,2] because it shares the same row as [1,0].
+4. Remove stone [1,0] because it shares the same column as [0,0].
+5. Remove stone [0,1] because it shares the same row as [0,0].
+Stone [0,0] cannot be removed since it does not share a row/column with another stone still on the plane.
+
+Example 2:
+
+Input: stones = [[0,0],[0,2],[1,1],[2,0],[2,2]]
+Output: 3
+Explanation: One way to make 3 moves is as follows:
+1. Remove stone [2,2] because it shares the same row as [2,0].
+2. Remove stone [2,0] because it shares the same column as [0,0].
+3. Remove stone [0,2] because it shares the same row as [0,0].
+Stones [0,0] and [1,1] cannot be removed since they do not share a row/column with another stone still on the plane.
+
+Example 3:
+
+Input: stones = [[0,0]]
+Output: 0
+Explanation: [0,0] is the only stone on the plane, so you cannot remove it.
+
+ 
+
+Constraints:
+
+    1 <= stones.length <= 1000
+    0 <= xi, yi <= 10^4
+    No two stones are at the same coordinate point.
+
+***************************************************************************************************************************************************************
+
+/*
+Solution for this question is calculated by formula "  no. of moves = no. of stones – no. of connected components(islands) " . The reason is there has to be at least 1 node left.
+Let's assume all the nodes connect to each other (let's say there are 5 nodes). If all the nodes connect to each other, then that will form 1 island. However, if you have one island, you can remove 4 of those nodes, and 1 will be remaining. So if there are 5 nodes, and they all form 1 island, the most you can remove is (# of nodes - # of islands) or (5 - 1) which is equal to 4.
+*/
+
+//Another trick in this question is to construct the adjacency list of graph.
+
+class Solution {
+    public int removeStones(int[][] stones) {
+        int components = 0;
+        int visited[] = new int[stones.length];     
+        
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+        for(int i=0; i<stones.length; i++){
+            adj.add(new ArrayList<Integer>());
+        }
+        
+        for(int i=0; i<stones.length; i++){
+            for(int j=i+1; j<stones.length; j++){
+                if(stones[i][0]==stones[j][0] || stones[i][1]==stones[j][1]){    //if two stones has same x-coordinate or same y-coordinate then only we can have edge in the graph.
+                    adj.get(i).add(j);
+                    adj.get(j).add(i);
+                }
+            }
+        }
+        
+        
+        for(int i=0; i<stones.length; i++){                         //for loop is applied to cover each node from graph.
+            if(visited[i]==0){
+                ++components;
+                dfs(i, visited, adj);                               //Each call to dfs will cover one connected component.
+            }   
+        }
+        
+        return stones.length - components;                          //This is the final answer.
+    }
+    
+    
+    public void dfs(int node, int visited[], ArrayList<ArrayList<Integer>> adj ){           //This is code for simple dfs.
+        if(visited[node]==0){
+            visited[node] = 1;
+            for(int nbr : adj.get(node)){
+                dfs(nbr, visited, adj);
+            }
+        }
+    }
+}
+
+
+Time complexity : O(N^2).......here N is number of stones. It is becuase of graph contruction need two for loop.
+Space complexity : O(N) .......here N is number of stones.
