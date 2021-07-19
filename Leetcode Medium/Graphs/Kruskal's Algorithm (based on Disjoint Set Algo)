@@ -98,14 +98,14 @@ class Solution
         int parentU = findParent(u);
         int parentV = findParent(v);
         if(height[parentU]<height[parentV]){                        
-            parent[parentU] =  parentV;                         //If height of 'u' is less, then attach u to v 
+            parent[parentU] =  parentV;                         //If height of 'parentU' is less, then attach parentU to parentV i.e. "parent value of u" is equal "parent of v"
         }
         else if(height[parentU]>height[parentV]){
-            parent[parentV] =  parentU;                         //If height of 'v' is less, then attach v to u 
+            parent[parentV] =  parentU;                         //If height of 'parentV' is less, then attach parentV to parentU i.e. "parent value of v" is equal "parent of u"
         }
         else{
-            parent[parentU] =  parentV;                         //If height of 'u' is same as height 'v', then anyone to other and then increse the height by 1 
-            height[parentV]++;
+            parent[parentU] =  parentV;                         //If height of both is equal, then any node can attach to other node. Here we attach parentU to parentV i.e. "parent value of u" is equal "parent of v"
+            height[parentV]++;                                  //Also increase the 'rank' of 'height' for the parent node as one more level is got added in the union tree.
         }
     }
     
