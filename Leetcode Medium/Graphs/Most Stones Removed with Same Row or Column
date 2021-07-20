@@ -82,9 +82,9 @@ class Solution {
     
     
     public void dfs(int node, int visited[], ArrayList<ArrayList<Integer>> adj ){           //This is code for simple dfs.
-        if(visited[node]==0){
-            visited[node] = 1;
-            for(int nbr : adj.get(node)){
+        visited[node] = 1;
+        for(int nbr : adj.get(node)){
+            if(visited[nbr]==0){
                 dfs(nbr, visited, adj);
             }
         }
