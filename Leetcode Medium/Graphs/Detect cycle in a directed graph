@@ -62,8 +62,8 @@ class Solution
         
         for(int x:adj.get(node)){
             if(vis[x] == 0){
-                if(checkCycleDFS(x, vis, dfsvis, adj)==true)
-                    return true;
+                if(checkCycleDFS(x, vis, dfsvis, adj)==true)               //if any of the fuction call return 'true' then that 'true' value is carried by all parent functin calls.
+                    return true;                                           //This is beacuse, a cycle detected in a component indicates that whole graph contains the cycle.
             }
             else if(vis[x] == 1 && dfsvis[x] == 1){
                 return true;
