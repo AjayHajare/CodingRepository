@@ -1,0 +1,109 @@
+Given a m x n grid. Each cell of the grid has a sign pointing to the next cell you should visit if you are currently in this cell. The sign of grid[i][j] can be:
+
+    1 which means go to the cell to the right. (i.e go from grid[i][j] to grid[i][j + 1])
+    2 which means go to the cell to the left. (i.e go from grid[i][j] to grid[i][j - 1])
+    3 which means go to the lower cell. (i.e go from grid[i][j] to grid[i + 1][j])
+    4 which means go to the upper cell. (i.e go from grid[i][j] to grid[i - 1][j])
+
+Notice that there could be some invalid signs on the cells of the grid which points outside the grid.
+
+You will initially start at the upper left cell (0,0). A valid path in the grid is a path which starts from the upper left cell (0,0) and ends at the bottom-right 
+cell (m - 1, n - 1) following the signs on the grid. The valid path doesn't have to be the shortest.
+You can modify the sign on a cell with cost = 1. You can modify the sign on a cell one time only.
+
+Return the minimum cost to make the grid have at least one valid path.
+
+
+Example 1:
+
+Input: grid = [[1,1,1,1],[2,2,2,2],[1,1,1,1],[2,2,2,2]]
+Output: 3
+Explanation: You will start at point (0, 0).
+The path to (3, 3) is as follows. (0, 0) --> (0, 1) --> (0, 2) --> (0, 3) change the arrow to down with cost = 1 --> (1, 3) --> (1, 2) --> (1, 1) --> (1, 0) 
+change the arrow to down with cost = 1 --> (2, 0) --> (2, 1) --> (2, 2) --> (2, 3) change the arrow to down with cost = 1 --> (3, 3)
+The total cost = 3.
+
+Example 2:
+
+Input: grid = [[1,1,3],[3,2,2],[1,1,4]]
+Output: 0
+Explanation: You can follow the path from (0, 0) to (2, 2).
+
+Example 3:
+
+Input: grid = [[1,2],[4,3]]
+Output: 1
+
+Example 4:
+
+Input: grid = [[2,2,2],[2,2,2]]
+Output: 3
+
+Example 5:
+
+Input: grid = [[4]]
+Output: 0
+
+
+Constraints:
+    m == grid.length
+    n == grid[i].length
+    1 <= m, n <= 100
+
+*******************************************************************************************************************************************************************
+
+
+//Given Quesion is very important. for a block in grid, there are 'four' possible directions to move, given as 1-right, 2-left, 3-down, 4-up
+//Out of these 'four', only one direction is mentioned in a block of grid. for each block in grid we need to check all other remaining directions and get the possible ans.
+//This approach is based on "Dijkstra's algo", in which we use priority queue to maintain the sdjacent edges with ascending order of  weights.
+
+
+class Solution {
+    public int minCost(int[][] grid) {
+        
+        int m = grid.length, n = grid[0].length;
+            
+        PriorityQueue<int[]> q = new PriorityQueue<>( (a, b)-> a[0]-b[0] );             //Priority queue is defined to maintain the asce order of cost, such that lowest cost block of grid is at the top of priority queue.
+        q.add(new int[]{0, 0, 0});                                                      //The initial block with index (0, 0) has cost=0. So, we add first record in queue.
+        
+        int dir[][] = new int[][]{ {0,1}, {0,-1}, {1,0}, {-1,0} };                      //dir[] is defined to cover all four directions.
+        
+        int dist[][]  =  new int[m][n];                                            //dist[][] is defined to maintain the cost for each block of grid. Hence size is same as grid
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                dist[i][j] = Integer.MAX_VALUE;                                     //initialize dist[][] with largest value possible.
+            }
+        }
+        
+        dist[0][0] = 0;                                                             //for source node at upper leftmost corner,  dist=0
+        
+        while(!q.isEmpty()){                                                        
+            int temp[] = q.poll();                                                  //Remove topmost element from queue. This element will have block index and cost.
+            int cost = temp[0], r = temp[1], c = temp[2];
+            
+            for(int i=0; i<4; i++){                                                 //We need to move in all four directions.
+                int nr = r + dir[i][0], nc = c + dir[i][1];                         //Calculate new index for row and column
+                
+                if(nr>=0 && nr<m && nc>=0 && nc<n){                                 //after movind first check whether we are inside boundries of grid
+                    int ncost = cost;
+                    if(i != (grid[r][c]-1) )                                     //direction in which we have moved is not equal to given direcion in correspoding block of grid then increament the cost by '1'
+                        ncost+=1;
+                    
+                    if(ncost < dist[nr][nc]){                                    
+                        dist[nr][nc] = ncost;                                   //if the 'new cost' is less than 'present distance' in dist[][], then update value in dist[][]
+                        q.add(new int[]{ncost, nr, nc});                        //and add this new value in queue as well, so that next calculation is done with this new value
+                    }
+                }
+            }
+            
+        }
+        
+        return dist[m - 1][n - 1];                                              //At the end bottom rightmost block will have min cost required to reach that block.
+    }
+}
+
+
+
+//Time complexity  :   O(mn * log(mn))........For the problem, we actually created a graph with 4mn edges and mn nodes. By using the Dijkstra algorithm, we can guarantee to achieve it in O(ElogV) ~ O(mn * log(mn))
+//Space complexity  :   O(m*n)  ........for dist[][]
+
