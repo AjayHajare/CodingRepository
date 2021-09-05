@@ -158,7 +158,8 @@ public class Main
 		            int node = q.poll();
 		            if(visited[node] == 0){
 		                visited[node] = 1;
-		                dfs.add(node);
+		                
+				bfs.add(node);
 		                
 		                for(int x : adj.get(node)){
 		                    q.add(x);
