@@ -116,6 +116,55 @@ class Solution{
 	}
 }
 
-Time complexity : O(mnlogmn). Since there could be at most m×n points, therefore the time complexity is O(mnlogmn) due to sorting.
+Time complexity : O((mn)log(mn)). Since there could be at most m×n points, therefore the time complexity is O((mn)log(mn)) due to sorting.
+
+Space complexity : O(mn).
+
+****************************************************************************************************************************************************************
+
+/* 
+OPTIMAL APPROACH :
+  Int the above approach, first we are creating separate lists for x-coordinates and y-coordinates. Then soring them to find the MEDIAN.
+  We can improve same approach by some implementation changes. Instead of creating and sorting lists. We can create sorted order lists while traversing.
+  For that we used two loop. First loop is to fill 'rows' list and second loop is to fill 'cols' list.
+*/
+
+public class Solution {
+    public int minTotalDistance(int[][] grid) { 
+		List<Integer> rows = new ArrayList<>(); 
+		List<Integer> cols = new ArrayList<>(); 
+		for (int row = 0; row < grid.length; row++) { 				//create separate list for x-coordinates and y-coordinates where the home exists 
+			for (int col = 0; col < grid[0].length; col++) { 
+				if (grid[row][col] == 1) { 
+					rows.add(row); 
+				} 
+			} 
+		}
+
+        for (int col = 0; col < grid[0].length; col++) {				//create separate list for x-coordinates and y-coordinates where the home exists  
+            for (int row = 0; row < grid.length; row++) { 
+				if (grid[row][col] == 1) { 
+					cols.add(col); 
+				} 
+			} 
+		} 
+		int row = rows.get(rows.size() / 2); 
+		int col = cols.get(cols.size() / 2); 					//Sort the list and the MEDIAN.
+
+		return minDistance1D(rows, row) + minDistance1D(cols, col); 		//First calculate distance of each x-coordinate where home exist to MEDIAN x-coordinate.
+											//then calculate distance of each y-coordinate where home exist to MEDIAN y-coordinate.
+											//Add the both distance, to get the answer.
+	}
+
+	private int minDistance1D(List<Integer> points, int origin) { 
+		int distance = 0; 
+		for (int point : points) { 
+			distance += Math.abs(point - origin); 
+		} 
+		return distance; 
+	}
+}
+ 
+Time complexity : O(mn). 
 
 Space complexity : O(mn).
