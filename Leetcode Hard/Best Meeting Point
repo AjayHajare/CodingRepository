@@ -1,0 +1,121 @@
+Description
+A group of two or more people wants to meet and minimize the total travel distance. You are given a 2D grid of values 0 or 1, where each 1 marks the home of someone
+in the group. The distance is calculated using Manhattan Distance, where distance(p1, p2) = |p2.x - p1.x| + |p2.y - p1.y|.
+
+Example 1:
+Input:
+[[1,0,0,0,1],[0,0,0,0,0],[0,0,1,0,0]]
+Output:
+6
+Explanation:
+The point `(0,2)` is an ideal meeting point, as the total travel distance of `2 + 2 + 2 = 6` is minimal. So return `6`.
+
+Example 2:
+Input:
+[[1,1,0,0,1],[1,0,1,0,0],[0,0,1,0,1]]
+Output:
+14
+
+********************************************************************************************************************************************************************
+
+/* 
+BRUTE FORCE APPROACH :
+  First thing is given in questin is a gird[][] and another thing given is formula to calculate manhattan distance.
+  We know than the meeting point can be one of the point in the grid[][]. Because they can not meet outside the grid. 
+  So, in brute force approach, we consider each point of grid and calculate manhattan distance between current point and all homes. 
+  And then, out of all these distances, we will choose the smallest distance as our answer.
+*/
+
+public class Solution {
+    public int minTotalDistance(int[][] grid) { 
+        List points = getAllPoints(grid); 				//First all points where homes exist, are extracted.
+
+        int minDistance = Integer.MAX_VALUE; 
+        for (int row = 0; row < grid.length; row++) { 
+            for (int col = 0; col < grid[0].length; col++) { 
+                int distance = calculateDistance(points, row, col); 		//For each point in grid calculate distance of current point to all homes.
+                minDistance = Math.min(distance, minDistance); 				//After calculating distance, compare it with current min, if it is minimum then update current min.
+            } 
+        } 
+        return minDistance; 
+    }
+
+
+	private int calculateDistance(List<Point> points, int row, int col) { 			//Function to calculate distance of current point to all homes.
+		int distance = 0; 
+		for (Point point : points) { 
+			distance += Math.abs(point.row - row) + Math.abs(point.col - col); 			//Manhattan Formula is used.
+		} 
+		return distance; 
+	}
+
+    private List getAllPoints(int[][] grid) { 			//This will find the points at which homes exist.
+        List<Point> points = new ArrayList<>(); 
+        for (int row = 0; row < grid.length; row++) { 
+            for (int col = 0; col < grid[0].length; col++) { 
+                if (grid[row][col] == 1) { 
+                    points.add(new Point(row, col)); 
+                } 
+            } 
+        } 
+        return points; 
+    }
+
+	
+}
+class Point { 
+    int row; int col; 
+    public Point(int row, int col) { 
+        this.row = row; 
+        this.col = col;         
+    } 
+}
+
+
+Time Complexity :  for m*n matrix, it will be O((m^2)(n^2)).
+Space Complexity : Extra list of point is maintained. In worst case, complexity can be O(mn).
+
+******************************************************************************************************************************************************************
+
+/* 
+BETTER APPROACH :
+  The best point to meet two or more people to minimize the total travel distance, is the MEDIAN.
+  So, we consider each point of grid where the home exists and create separate list for x-coordinates and y-coordinates.
+  Then find MEDIAN of x-coordinates and y-coordinates. For that we need to sort both the list.
+  This MEDIAN of x-coordinates and y-coordinates is our meeting point. So, calculate the manhaattan distance from this point to all point which have homes. And it is the smallest distance .
+*/
+
+class Solution{
+	public int minTotalDistance(int[][] grid) { 
+		List rows = new ArrayList<>(); 
+		List cols = new ArrayList<>(); 
+		for (int row = 0; row < grid.length; row++) { 						//create separate list for x-coordinates and y-coordinates where the home exists 
+			for (int col = 0; col < grid[0].length; col++) { 
+				if (grid[row][col] == 1) { 
+					rows.add(row); 
+					cols.add(col); 
+				} 
+			} 
+		} 
+		Collections.sort(rows); 										//Sort the list and the MEDIAN.
+		int row = rows.get(rows.size() / 2); 
+		Collections.sort(cols); 
+		int col = cols.get(cols.size() / 2); 							//Sort the list and the MEDIAN.
+
+		return minDistance1D(rows, row) + minDistance1D(cols, col); 	//First calculate distance of each x-coordinate where home exist to MEDIAN x-coordinate.
+																		//then calculate distance of each y-coordinate where home exist to MEDIAN y-coordinate.
+																		//Add the both distance, to get the answer.
+	}
+
+	private int minDistance1D(List points, int origin) { 
+		int distance = 0; 
+		for (int point : points) { 
+			distance += Math.abs(point - origin); 
+			} 
+		return distance; 
+	}
+}
+
+Time complexity : O(mnlogmn). Since there could be at most m×n points, therefore the time complexity is O(mnlogmn) due to sorting.
+
+Space complexity : O(mn).
