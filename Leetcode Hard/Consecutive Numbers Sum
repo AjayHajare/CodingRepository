@@ -1,0 +1,146 @@
+Given an integer n, return the number of ways you can write n as the sum of consecutive positive integers.
+
+ 
+Example 1:
+Input: n = 5
+Output: 2
+Explanation: 5 = 2 + 3
+
+Example 2:
+Input: n = 9
+Output: 3
+Explanation: 9 = 4 + 5 = 2 + 3 + 4
+
+Example 3:
+Input: n = 15
+Output: 4
+Explanation: 15 = 8 + 7 = 4 + 5 + 6 = 1 + 2 + 3 + 4 + 5
+ 
+
+Constraints:
+1 <= n <= 10^9
+
+*******************************************************************************************************************************************************************
+
+/* Bruteforce Solution : 
+        The number given 'n'--- if we consider 'n/2', we will then consecutive numbers are 
+                                (n/2, (n/2)+1) & ((n/2)-1, n/2).
+                                Similarly if we consider 'n/3', we will then consecutive numbers are 
+                                ((n/3)-1, n/3, (n/3)+1).
+                                
+        On basis of above obrvation, the below solution formed. 
+        Time complexity : O(n^2)
+*/
+
+class Solution {
+    public int consecutiveNumbersSum(int n) {
+        int res = 1;
+        
+        if(n==3){
+            return 2;
+        }
+        
+        for(int i=2; i<=n/2; i++){
+            int temp = n/i;
+            
+            if(i%2==1){
+                int sum = 0;
+                for(int j=(temp-i/2); j<=(temp+i/2); j++){
+                    if(j<=0){
+                        break;
+                    }
+                    sum += j;
+                }
+                if(sum==n){
+                    res++;
+                }
+            }
+            else{
+                int sum = 0;
+                for(int j=(temp-(i/2)+1); j<=(temp+(i/2)); j++){
+                    if(j<=0){
+                        break;
+                    }
+                    sum += j;
+                }
+                if(sum==n){
+                    res++;
+                }
+                
+                sum = 0;
+                for(int j=(temp-(i/2)); j<(temp+(i/2)); j++){
+                    if(j<=0){
+                        break;
+                    }
+                    sum += j;
+                }
+                if(sum==n){
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+Time Complexity : O(n^2)
+Space Complexity : O(1)
+*******************************************************************************************************************************************************************
+
+
+/*
+Lets make some observation first.
+
+of length k only one consecutive sequence is possible.
+eg: let say we want to make 18
+3 4 5 6 sum:18
+if we go left having length k sum will decrease(2 3 4 5)
+if we go to right sum increase (4 5 6 7)
+
+So only one consecutive sequence of length k with specific sum is possible.
+
+So now i have to find all possible sequence that starts with x , having length k and sum equals to n.
+
+x+ (x+1) + (x+2) ..... (x+k-1)=n
+kx + k(k-1)/2 = n
+
+K:unknown and also X:unknown
+So try hit and trail
+
+kx=n - k*(k-1)/2
+k>0 and x>0 so LHS always Positive
+
+n-k*(k-1)/2 > 0
+n>k*(k-1)/2
+n>k*(k)/2 // approximation
+2n>k^2
+sqrt(2n)>k
+
+now we have range for k . k>0 and k<sqrt(2n)
+
+kx= n - k*(k-1)/2     ----------(i)
+
+Now we got range of k, next thing to find the value of next unknown 'x'. If we divide eq (i) by 'k' both sides,
+x= (n - k*(k-1)/2) / k
+
+Here x is starting value of series of consecutive number which sums up to given number 'n'. Hence we want value of x to be integer. 'x' will be integer, when  (n - k*(k-1)/2) is divisible by 'k'. Hence we need to count values of 'k' for which (n-k*(k-1)/2) % k ==0 .
+
+This count will be our answer.
+
+*/
+
+class Solution {
+ public int consecutiveNumbersSum(int N) {
+
+        int ans=0;
+        
+        for(int k=1;k*k<2*N;k++){
+            
+            if((N-k*(k-1)/2)%k==0) ans++;
+        }
+        return ans;
+ }
+}
+
+
+Time : O(sqrt(n)) and Space:O(1)
