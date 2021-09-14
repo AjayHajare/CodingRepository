@@ -111,15 +111,17 @@ Space complexity : O(n)
 *****************************************************************************************************************************************************************
 QUICK SORT :
 
-public class MyClass{
+import java.util.*;
+public class QuickSort{
 	public static void main(String[] args) {  
-        int i;  
-        int[] arr=new int[]{99,90,23,45,65,23,67,89,34,23};  
-        quickSort(arr, 0, 9);  
+        int arr[] = new int[]{23, 3, 0, 900,-1,-8,-3, 34, -65};  
+        quickSort(arr, 0, arr.length-1);  
         
         System.out.println("\n The sorted array is: \n");  
-        for(i=0;i<10;i++)  
+        for(int i=0;i<arr.length;i++)  
             System.out.print(arr[i]+" ");  
+
+        System.out.println();
     }
     
     public static void quickSort(int arr[], int beg, int end){
@@ -135,9 +137,9 @@ public class MyClass{
         int i = beg, j = end;
         
         while(i<j){
-            while(arr[i]<=pivot)
+            while(arr[i]<=pivot && i<end)
                 i++;
-            while(arr[j]>pivot)
+            while(arr[j]>pivot && j>=beg)
                 j--;
                 
             if(i<j)
@@ -156,3 +158,5 @@ public class MyClass{
     }
 }
 
+Time Complexity : O(n^2),  but average complexity is O(nlogn)
+Space complexity : O(1)
