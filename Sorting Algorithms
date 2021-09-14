@@ -109,3 +109,50 @@ Time Complexity : O(nlogn)
 Space complexity : O(n)
 
 *****************************************************************************************************************************************************************
+QUICK SORT :
+
+public class MyClass{
+	public static void main(String[] args) {  
+        int i;  
+        int[] arr=new int[]{99,90,23,45,65,23,67,89,34,23};  
+        quickSort(arr, 0, 9);  
+        
+        System.out.println("\n The sorted array is: \n");  
+        for(i=0;i<10;i++)  
+            System.out.print(arr[i]+" ");  
+    }
+    
+    public static void quickSort(int arr[], int beg, int end){
+        if(beg < end){
+            int loc = partition(arr, beg, end);
+            quickSort(arr, beg, loc-1);
+            quickSort(arr, loc+1, end);
+        }
+    }
+    
+    public static int partition(int arr[], int beg, int end){
+        int pivot = arr[beg];
+        int i = beg, j = end;
+        
+        while(i<j){
+            while(arr[i]<=pivot)
+                i++;
+            while(arr[j]>pivot)
+                j--;
+                
+            if(i<j)
+                swap(arr, i, j);
+        }
+        
+        swap(arr, beg, j);
+        
+        return j;
+    }
+    
+    public static void swap(int arr[], int i, int j){
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+
