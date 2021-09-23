@@ -57,8 +57,10 @@ class Solution {
 }
 
 *****************************************************************************************************************************************************************
-
+//Optimal Solution :
 More optimal solution can be formed based on given constraints. Instead of inbuilt sort, we can use 'Count Sort' as max value of an array element is '3*10^4'.
+   TC : O(n)
+   SC : O(limit)
 
 class Solution {
     public int numRescueBoats(int[] people, int limit) {
