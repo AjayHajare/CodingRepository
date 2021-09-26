@@ -1,0 +1,99 @@
+Given an integer array nums, find a contiguous non-empty subarray within the array that has the largest product, and return the product.
+
+It is guaranteed that the answer will fit in a 32-bit integer.
+
+A subarray is a contiguous subsequence of the array.
+
+ 
+
+Example 1:
+
+Input: nums = [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+Example 2:
+
+Input: nums = [-2,0,-1]
+Output: 0
+Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+ 
+
+Constraints:
+
+1 <= nums.length <= 2 * 10^4
+-10 <= nums[i] <= 10
+The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+
+*****************************************************************************************************************************************************************
+
+//Optimal Appraoch from Pepcoding video :----------------
+
+class Solution{
+    public int maxProduct(int[] nums){
+        int maxProd = Integer.MIN_VALUE;
+        int currentProd = 1;
+        
+        for(int j=0; j<nums.length; j++){
+            currentProd = currentProd*nums[j];
+            
+            maxProd = Math.max(currentProd, maxProd);
+            
+            if(currentProd == 0){
+                currentProd = 1;
+            }
+        }
+        currentProd = 1;
+        
+        for(int j=nums.length-1; j>=0; j--){
+            currentProd = currentProd*nums[j];
+            
+            maxProd = Math.max(currentProd, maxProd);
+            
+            if(currentProd == 0){
+                currentProd = 1;
+            }
+        }
+        
+        return maxProd;
+    }
+}
+
+*****************************************************************************************************************************************************************
+
+/*
+Another optimal approach same as "Maximum Subarray Sum ".
+Max-product is more complicated: the product of two negative values is positive. But we still have: The max-product of subarrays ended at nums[i] is either:
+
+case 1: nums[i] * the max-product of subarrays ended at nums[i-1], or
+case 2: nums[i] * the min-product of subarrays ended at nums[i-1], or
+case 3: nums[i] itself.
+
+Case 1 happens when nums[i] and max-product ended at nums[i-1] are positive; Case 2 happens when nums[i] and min-product ended at nums[i-1] are negative; Case 3 happens when nums[i] is positve, but the max-product of subarrays ended at nums[i-1] is negative, or when nums[i] is negative, and the min-product of subarrays ended at nums[i-1] is positive.
+
+We can use two variables maxProdAtPrev and minProdAtPrev to keep track of the above information.
+
+if we see a negative number, the "candidate" for max should instead become the previous min product, because a bigger number multiplied by negative becomes smaller, hence the swap().
+
+*/
+
+class Solution{
+    public int maxProduct(int[] nums){
+        if (nums.length==0) return 1;
+        
+        int maxProd = nums[0];
+        int maxProdAtPrev = maxProd, minProdAtPrev = maxProd;
+        for (int i = 1; i < nums.length; i++) {
+		    if (nums[i] < 0) {
+		        maxProdAtPrev = maxProdAtPrev + minProdAtPrev;                      //Logic to swap
+		        minProdAtPrev = maxProdAtPrev - minProdAtPrev;                  
+		        maxProdAtPrev = maxProdAtPrev - minProdAtPrev;
+		    }
+			maxProdAtPrev = Math.max(nums[i], maxProdAtPrev * nums[i]);
+			minProdAtPrev = Math.min(nums[i], minProdAtPrev * nums[i]);
+			
+            maxProd = Math.max(maxProd, maxProdAtPrev);
+            
+        }
+        return maxProd;
+    }
+}
