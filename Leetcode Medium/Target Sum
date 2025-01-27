@@ -26,7 +26,29 @@ Constraints:
 
 ***********************************************************************************************************************************************************************
 
-//This solution is based on "0/1 knapsack problem".
+/*
+//<----------- RECURSION -------->
+
+class Solution {
+    public int findTargetSumWays(int[] nums, int target){
+        int n = nums.length;
+        return countTargetSum(nums, target, 0, n);
+    }
+    
+    private int countTargetSum(int nums[], int target, int currentSum, int n){
+        if(n==0 && target==currentSum){
+            return 1; 
+        }
+        if(n==0){
+            return 0;
+        }
+        
+        return countTargetSum(nums, target, currentSum+nums[n-1], n-1) + countTargetSum(nums, target, currentSum-nums[n-1], n-1);
+    }
+}
+*/
+
+//  <------- This solution is based on "0/1 knapsack problem". This passes 138/141 testcases. ----------->
 /* Intuition :-     Suppose we assigned '+' sign to some numbers of array and '-' sign to remaining numbers of array. We made 1 subset(S1) for all '+' numbers and  
                     other subset(S2) for all '-' numbers. 
                           S1 - S2  = target       --------(I)
@@ -35,13 +57,11 @@ Constraints:
                     from (I) and (II) 
                           S1 = (target + totalSum) / 2     ----------(in below solution it is refered as 'W')
                     Now problem boils down to "count number of subset of given sum 'S1'"
-                    
                     According to constraints, zeros are allowed in the array. In addtion, zeros doesn't make in difference, but for each zero there are two possibility
                     whether to include it or not. Hence, we first calculate no of zeros in variable 'countZero' and then multiply ans return by countSubsetOfSum() by
                     pow(2, countZero).
-                    One more modification for '0' is needed while filling table of knapsack: if current array element is zero, then copy value from above block. 
-                    
-
+                    One more modification for '0' is needed while filling table of knapsack: if current array element is zero, then copy value from above block.
+ 
 
 class Solution {
     public int findTargetSumWays(int[] nums, int target) {
@@ -90,4 +110,52 @@ class Solution {
         
         return t[n][W];
     }
+}
+*/
+
+//<----------- MEMOIZATION -------->
+
+/*
+There are 2 variables that keeps on changing 'index' and 'currentSum'. The range of currentSum is 
+    '-sumOfAllElements' --> when all negative values are considered.
+    '+sumOfAllElements' --> when all positive values are considered.
+Hence number of columns are (2*sumOfAllElements+1), where '1' is added for case when sum becomes zero.
+
+Theory Ecplanation :----------- 
+https://leetcode.com/problems/target-sum/solutions/955210/Recursion-to-DP-or-Detailed-explanation-with-code-video-and-diagrams-or-Python
+
+Java Code :---------- 
+https://leetcode.com/problems/target-sum/discuss/955210/Recursion-to-DP-or-Detailed-explanation-with-code-video-and-diagrams-or-Python/1108911
+
+*/
+class Solution {
+    public int findTargetSumWays(int[] nums, int target){
+        int max_limit = 0;
+        for (int n: nums) {
+            max_limit += n;
+        }
+        
+        if (target < -max_limit || target > max_limit) return 0;
+        
+        int n = nums.length;
+        int dp[][] = new int[n+1][2*max_limit+1];
+        dp[n][max_limit] = 1;
+        
+        for (int i=n-1; i >=0; i--) {
+            for (int j=-max_limit; j <= max_limit; j++) {
+                int centered_j = j + max_limit;
+                int positive = centered_j + nums[i];
+                int negative = centered_j - nums[i];
+                
+                if (negative >= 0)
+                    dp[i][centered_j] += dp[i+1][negative];
+                
+                if (positive <= 2*max_limit)
+                    dp[i][centered_j] += dp[i+1][positive];
+            }
+        }
+        
+        return dp[0][target+max_limit];
+    }
+    
 }
