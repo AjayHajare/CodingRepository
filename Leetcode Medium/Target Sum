@@ -48,7 +48,8 @@ class Solution {
 }
 */
 
-//  <------- This solution is based on "0/1 knapsack problem". This passes 138/141 testcases. ----------->
+
+// -------------- Memoization --------------------------------------
 /* Intuition :-     Suppose we assigned '+' sign to some numbers of array and '-' sign to remaining numbers of array. We made 1 subset(S1) for all '+' numbers and  
                     other subset(S2) for all '-' numbers. 
                           S1 - S2  = target       --------(I)
@@ -57,63 +58,44 @@ class Solution {
                     from (I) and (II) 
                           S1 = (target + totalSum) / 2     ----------(in below solution it is refered as 'W')
                     Now problem boils down to "count number of subset of given sum 'S1'"
-                    According to constraints, zeros are allowed in the array. In addtion, zeros doesn't make in difference, but for each zero there are two possibility
-                    whether to include it or not. Hence, we first calculate no of zeros in variable 'countZero' and then multiply ans return by countSubsetOfSum() by
-                    pow(2, countZero).
-                    One more modification for '0' is needed while filling table of knapsack: if current array element is zero, then copy value from above block.
- 
+                    According to constraints, zeros are allowed in the array. 
+                    NEED TO TAKE EXTRA CARE FOR BASE CONDITION.
+
 
 class Solution {
-    public int findTargetSumWays(int[] nums, int target) {
-        int totalSum = 0;
-        int countZero = 0;
-        
-        for(int x : nums){
-            if(x==0)    
-                countZero++;
-            totalSum += x;
-        }
-        
-        if(target > totalSum)
-            return 0;
-        
-        if((target + totalSum)%2 != 0)
-            return 0;
-        
-        int W = (target + totalSum)/2;
-        
-        return (int)Math.pow(2,countZero) * countSubsetOfSum(nums, W);
-    }
+    Integer[][] dp;
     
-    static int countSubsetOfSum(int nums[], int W){
-        int n = nums.length;
+    int solve(int[] nums, int i, int sum) {
+        if(sum == 0 && i==nums.length) return 1;
+        if(i >= nums.length || sum < 0) return 0;
         
-        int t[][] = new int[n+1][W+1];
+        if(dp[i][sum] != null) return dp[i][sum];
         
-        for(int j=0; j<W+1; j++){
-            t[0][j] = 0;
-        }
-        for(int i=0; i<n+1; i++){
-            t[i][0] = 1;
-        }
-        
-        for(int i=1; i<n+1; i++){
-            for(int j=1; j<W+1; j++){
-                if(nums[i-1] == 0)                                    //modification for '0' as explained above
-                    t[i][j] = t[i-1][j];
-                else if(nums[i-1] > j)
-                    t[i][j] = t[i-1][j];
-                else
-                    t[i][j] = t[i-1][j] + t[i-1][j-nums[i-1]];
-            }
+        int ans = solve(nums, i+1, sum - nums[i]) + solve(nums, i+1, sum);
+        return dp[i][sum] = ans;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for(int num : nums) {
+            sum += num;
         }
         
-        return t[n][W];
+        if((sum  + target) % 2 != 0 || target > sum || target + sum < 0) return 0;
+        
+        int s = (sum + target)/2;
+        dp = new Integer[nums.length][s + 1];
+        return solve(nums, 0, s);
     }
 }
-*/
 
-//<----------- MEMOIZATION -------->
+
+
+
+
+
+
+//<----------- Tabulization Extra work -------->
 
 /*
 There are 2 variables that keeps on changing 'index' and 'currentSum'. The range of currentSum is 
